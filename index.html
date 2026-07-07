@@ -17,7 +17,7 @@
     <!-- Biblioteca JSZip para compactação de arquivos -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght=300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         /* Reset de dimensionamento global */
         *, ::before, ::after {
@@ -53,7 +53,7 @@
         .page-a4, .page-a4 * {
             font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
             line-height: 1.5em; 
-            text-decoration: none !important;
+            text-decoration: none !important; /* Remove sublinhados indesejados de extensões */
             box-sizing: border-box;
         }
 
@@ -83,20 +83,20 @@
             break-inside: avoid;
             display: flex;
             flex-direction: column;
-            margin-top: -1px;
+            margin-top: -1px; /* Resolve problemas de linha dupla entre blocos */
         }
 
-        /* Títulos Cinzas das Seções */
+        /* Títulos Cinzas das Seções - Espaçamento e Alinhamento Melhorados */
         .section-label { 
             background: #f1f1f1; 
             font-weight: 900; 
             text-transform: uppercase; 
             font-size: 6.8pt; 
             border: 1px solid #000;
-            padding: 5px 6px;
+            padding: 5px 6px; /* Aumentado para o texto não encostar nas bordas */
             display: block;
             width: 100%;
-            line-height: 1.2;
+            line-height: 1.2; /* Garante centralização vertical estável */
         }
         
         /* Caixas de Conteúdo das Seções */
@@ -104,13 +104,13 @@
             border-left: 1px solid #000;
             border-right: 1px solid #000;
             border-bottom: 1px solid #000;
-            padding: 6px 8px;
+            padding: 6px 8px; /* Aumentado para dar margem interna ao texto */
             text-align: justify; 
             font-size: 6.8pt; 
             display: block;
             width: 100%;
             background: #fff;
-            line-height: 1.4;
+            line-height: 1.4; /* Espaçamento entre linhas confortável */
         }
 
         /* Parágrafos internos de caixas */
@@ -498,11 +498,12 @@
     </div>
 
     <script>
+        // Forçar mapeamento global imediato do jsPDF após carregamento do CDN
         if (window.jspdf && !window.jsPDF) {
             window.jsPDF = window.jspdf.jsPDF;
         }
 
-        // MATRIZ DE CATEGORIAS DE RISCO SST
+        // DEFINIÇÃO DA MATRIZ DE CATEGORIAS DE RISCO SST
         const RISK_CATEGORIES = {
             acidente: { name: "Acidentes", color: "#2196F3", keywords: ["queda", "choque", "transporte", "batida", "impacto", "corte", "perfura", "animal", "animais", "peçonhento", "incêndio", "explosão", "altura", "confinado", "trânsito", "suspensa", "físico intenso"] },
             ergonomico: { name: "Ergonômicos", color: "#FF9800", keywords: ["postura", "ergon", "coluna", "levantamento", "transporte manual", "peso", "esforço", "repetitivo", "pedais", "pé por longo", "sentado por longo", "visualização", "flexões", "deslocamento a pé", "incômoda", "membros superiores", "digitação", "teclado", "reflexos", "telas"] },
@@ -684,7 +685,7 @@
             },
             "SUPERVISÃO ADMINISTRATIVO": {
                 agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos em telas ou monitores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes and atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
+                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
                 epis: "",
                 epcs: "",
                 peric: "Não caracteriza conforme NR 16",
@@ -692,7 +693,7 @@
             },
             "PROJETOS ADMINISTRATIVO": {
                 agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos em telas ou monitores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
+                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programs corporativos de bem-estar",
                 epis: "",
                 epcs: "",
                 peric: "Não caracteriza conforme NR 16",
@@ -780,118 +781,7 @@
             }
         };
 
-        // MAPEAMENTO DOS CARGOS PADRÕES POR SETOR (PARA CARREGAMENTO AUTOMÁTICO OFFLINE)
-        const DEFAULT_CARGOS_BY_SECTOR = {
-            "REDE / CABISTA": [
-                { nome: "CABISTA", desc: "Realiza emendas, fusões em elementos passivos e testes de fibra a fim de garantir a integridade dos serviços executados em redes de telecomunicações." },
-                { nome: "AUXILIAR DE CABISTA", desc: "Auxilia o cabista na preparação de cabos, montagem de escadas, sinalização de via e organização de ferramentas." },
-                { nome: "OFICIAL DE REDE", desc: "Executa a instalação física de cabos ópticos e metálicos em postes e galerias subterrâneas de telecomunicação." }
-            ],
-            "OBRAS REDE": [
-                { nome: "AUXILIAR DE OBRAS DE REDE", desc: "Auxilia na execução de obras civis, escavações e implantação de infraestrutura para redes aéreas e subterrâneas." },
-                { nome: "OFICIAL DE OBRAS DE REDE", desc: "Executa montagens estruturais, lançamento de cabos e acabamento em infraestrutura de rede externa." },
-                { nome: "ENCARREGADO DE OBRAS", desc: "Supervisiona as equipes de obras, controlando prazos, cumprimento das normas de segurança e qualidade do projeto." }
-            ],
-            "LABORATÓRIO": [
-                { nome: "TÉCNICO DE LABORATÓRIO", desc: "Realiza testes de conformidade, calibração, manutenção técnica e reparos em equipamentos ópticos e eletrônicos." },
-                { nome: "AUXILIAR DE LABORATÓRIO", desc: "Presta suporte na organização de bancadas, higienização, triagem inicial e empacotamento de equipamentos elétricos." }
-            ],
-            "MANUTENÇÃO PATRIMONIAL": [
-                { nome: "AUXILIAR DE MANUTENÇÃO PATRIMONIAL", desc: "Executa serviços gerais de conservação predial, jardinagem, pequenas pinturas e reparos estruturais não especializados." },
-                { nome: "OFICIAL DE MANUTENÇÃO", desc: "Executa reparos civis, hidráulicos e elétricos preventivos ou corretivos em instalações internas de bases operacionais." }
-            ],
-            "OPERAÇÃO EMPILHADEIRA": [
-                { nome: "OPERADOR DE EMPILHADEIRA", desc: "Opera empilhadeira industrial para carga, descarga, transporte e paletização de materiais e bobinas pesadas no pátio." }
-            ],
-            "ALMOXARIFADO": [
-                { nome: "AUXILIAR DE ALMOXARIFADO", desc: "Recebe, organiza, separa e distribui materiais e ferramentas de campo solicitados pelas equipes." },
-                { nome: "ALMOXARIFE", desc: "Realiza o controle e inventário físico do estoque, conferência de notas fiscais e alimentação sistêmica do inventário." }
-            ],
-            "DG - DISTRIBUIÇÃO GERAL": [
-                { nome: "TÉCNICO DE DG", desc: "Executa jumpers de conexão nos blocos do distribuidor geral, monitora e testa portas analógicas e lógicas." },
-                { nome: "AUXILIAR DE DG", desc: "Apoia no cabeamento físico de rack e identificação dos blocos metálicos de conexão dentro da central." }
-            ],
-            "OPERAÇÃO B2B": [
-                { nome: "TÉCNICO DE OPERAÇÃO B2B", desc: "Realiza instalação, configuração e ativação de modems, roteadores e redes corporativas diretamente no cliente empresarial." }
-            ],
-            "FROTA": [
-                { nome: "ASSISTENTE DE FROTA", desc: "Controla a quilometragem, vistorias preventivas, controle de combustível e liberação de veículos operacionais." }
-            ],
-            "AMBULATÓRIO QSMS": [
-                { nome: "TÉCNICO DE ENFERMAGEM DO TRABALHO", desc: "Auxilia na execução de exames admissionais, demissionais, periódicos, campanhas internas de vacinação e triagem médica." }
-            ],
-            "SEGURANÇA DO TRABALHO": [
-                { nome: "TÉCNICO DE SEGURANÇA DO TRABALHO", desc: "Realiza inspeções de campo, investigações de acidentes, treinamentos de integração, controle de EPIs e cumprimento de NRs." }
-            ],
-            "SUPERVISÃO OPERACIONAL": [
-                { nome: "SUPERVISOR OPERACIONAL", desc: "Supervisiona as equipes técnicas em campo na prestação de serviços de rede, monitorando metas e indicadores de segurança." }
-            ],
-            "TRANSPORTE ADMINISTRATIVO": [
-                { nome: "MOTORISTA", desc: "Conduz veículos leves ou utilitários para transporte de colaboradores, ferramentas especiais, documentos ou malotes entre bases." }
-            ],
-            "SUPERVISÃO ALMOXARIFADO": [
-                { nome: "SUPERVISOR DE ALMOXARIFADO", desc: "Lidera a operação de logística do centro de distribuição, coordenando faturamentos, inventários físicos e controle patrimonial." }
-            ],
-            "FTTA-A": [
-                { nome: "TÉCNICO FTTA", desc: "Atua na implantação de links ópticos de última milha (FTTH/FTTA), conectando residências às redes primárias aéreas." }
-            ],
-            "INSTALADORES DE EQUIPAMENTOS B2B": [
-                { nome: "INSTALADOR DE EQUIPAMENTOS B2B", desc: "Executa fixação mecânica de racks, roteadores de alta performance e cabeamentos estruturados de redes." }
-            ],
-            "GERÊNCIAS ADMINISTRATIVO": [
-                { nome: "GERENTE ADMINISTRATIVO", desc: "Gere as áreas de suporte de negócios, finanças corporativas, compras ou controle orçamentário regional." }
-            ],
-            "COORDENAÇÃO ADMINISTRATIVO": [
-                { nome: "COORDENADOR ADMINISTRATIVO", desc: "Coordena a execução de processos contratuais corporativos, controle de faturamento ou gestão de rotinas internas." }
-            ],
-            "JURÍDICO ADMINISTRATIVO": [
-                { nome: "ANALISTA JURÍDICO", desc: "Analisa contratos administrativos, acompanha processos, executa rotinas societárias ou de conformidade regulatória." }
-            ],
-            "CONSULTORES ADMINISTRATIVO": [
-                { nome: "CONSULTOR ADMINISTRATIVO", desc: "Executa consultorias estratégicas internas, auxiliando na otimização de fluxos operacionais e transição de processos." }
-            ],
-            "ESPECIALISTAS ADMINISTRATIVO": [
-                { nome: "ESPECIALISTA ADMINISTRATIVO", desc: "Desenvolve relatórios complexos, gerencia riscos corporativos ou modela melhorias de processos corporativos." }
-            ],
-            "ANALISTAS ADMINISTRATIVO": [
-                { nome: "ANALISTA ADMINISTRATIVO", desc: "Analisa relatórios, realiza lançamentos em sistemas integrados, controla contas e executa rotinas operacionais administrativas." }
-            ],
-            "SUPERVISÃO ADMINISTRATIVO": [
-                { nome: "SUPERVISOR ADMINISTRATIVO", desc: "Supervisiona as equipes de atendimento interno, backoffice de suporte operacional ou faturamento de contratos." }
-            ],
-            "PROJETOS ADMINISTRATIVO": [
-                { nome: "ANALISTA DE PROJETOS", desc: "Responsável pelo controle de cronogramas, custos operacionais de implantação e apresentação de indicadores de projetos." }
-            ],
-            "ADMINISTRATIVO": [
-                { nome: "AUXILIAR ADMINISTRATIVO", desc: "Executa triagem de documentos, arquivamento físico, digitação de dados em planilhas, atendimento e recepção." }
-            ],
-            "MONITOR ESCRITÓRIO DE SERVIÇOS": [
-                { nome: "MONITOR DE ESCRITÓRIO DE SERVIÇOS", desc: "Monitora e faz o direcionamento sistemático das ordens de serviço de campo para os técnicos via software de despacho." }
-            ],
-            "SEGURANÇA DO TRABALHO OBRAS": [
-                { nome: "TÉCNICO DE SEGURANÇA DO TRABALHO OBRAS", desc: "Atua na fiscalização intensiva das frentes de obras civis e vias públicas, assegurando o uso correto dos isolamentos de trânsito." }
-            ],
-            "ASSISTENCIA TÉCNICA": [
-                { nome: "TÉCNICO DE ASSISTÊNCIA TÉCNICA", desc: "Realiza diagnósticos, emendas mecânicas e reparos emergenciais em redes de clientes corporativos fora de horário comercial." }
-            ],
-            "COORDENAÇÃO OPERACIONAL": [
-                { nome: "COORDENADOR OPERACIONAL", desc: "Coordena fluxos operacionais de campo, escalas de técnicos de plantão e controla os tempos de atendimento (SLA)." }
-            ],
-            "SUPERVISÃO REDE": [
-                { nome: "SUPERVISOR DE REDE", desc: "Supervisiona as frentes de trabalho externas aéreas e subterrâneas, executando a validação técnica de fusões e emendas ópticas." }
-            ],
-            "SOLDA": [
-                { nome: "SOLDADOR", desc: "Realiza reparos civis e mecânicos através de soldagem de eletrodo revestido e oxigás em peças de infraestrutura ou veiculares." }
-            ],
-            "REPARO INTERNO": [
-                { nome: "TÉCNICO DE REPARO INTERNO", desc: "Executa testes em laboratório, substituição de componentes eletrônicos queimados e atualização de softwares de modems." }
-            ],
-            "OPERAÇÃO MUNCK": [
-                { nome: "OPERADOR DE MUNCK", desc: "Opera braço articulado hidráulico de caminhão Munck para içamento e implantação de postes de concreto e carretéis ópticos." }
-            ]
-        };
-
-        // BANCO DE DADOS PERSISTENTE (INICIALIZA VAZIO)
+        // BANCO DE DADOS PERSISTENTE
         let db = JSON.parse(localStorage.getItem('icomon_pro_db_v4_colors')) || {
             setores: [
                 "SUPERVISÃO OPERACIONAL", "ASSISTENCIA TÉCNICA", "COORDENAÇÃO OPERACIONAL",
@@ -915,13 +805,14 @@
             }
         };
 
+        // Lista de Funcionários para Emissão em Massa
         let bulkEmployees = [];
 
-        // TEXTOS PADRÕES NR-1
+        // Textos Padrões de NR-1
         if (!db.textos) {
             db.textos = {
                 recomendacoes: "• Obedeça às normas de saúde e segurança do trabalho da Icomon; • Obedeça às leis de trânsito e procedimentos da direção defensiva; • Respeite a sinalização de segurança e de trânsito; • Comunique imediatamente seu Gestor imediato qualquer situação de risco que possa ocasionar acidentes; • Não pratique atos inseguros, arriscando-se desnecessariamente;",
-                acidentes: "Todo e qualquer acidente ou incidente de trabalho deverá ser comunicado ao Gestor e ao setor de Segurança do Trabalho imediatamente. Caso haja alguém passando mal nas dependências da empresa acione o brigadista do setor. A CAT será emitida em até 24 horas úteis após investigação da Segurança do Trabalho. <br><b>TODO ACIDENTE DEVE SER COMUNICADO IMEDIATAMENTE À LIDERANÇA E À SEGURANÇA DO TRABALHO.</b>",
+                acidentes: "Todo e qualquer acidente ou incidente de trabalho deverá ser comunicado ao Gestor e ao setor de Segurança do Trabalho imediatamente. Caso haja alguém passando mal nas dependências da empresa acione o brigadista do setor. A CAT será emitida in até 24 horas úteis após investigação da Segurança do Trabalho. <br><b>TODO ACIDENTE DEVE SER COMUNICADO IMEDIATAMENTE À LIDERANÇA E À SEGURANÇA DO TRABALHO.</b>",
                 procedimentos: "• Atenção ao caminhar nas bases operacionais, utilize as faixas de segurança; • Atravesse na faixa de pedestre e nunca utilize o aparelho celular enquanto anda; • Cumpra as disposições legais e regulamentadoras sobre Segurança e Medicina do Trabalho; • Colabore com a empresa no atendimento imediato da realização dos exames médicos.",
                 responsabilidade: "De acordo com o Artigo 158, Parágrafo Único, da lei 6.514/77 e Norma Regulamentadora NR 01, a recusa ao fiel cumprimento desta ORDEM DE SERVIÇO constituirá ATO FALTOSO sujeitando o funcionário às penalidades previstas na lei.",
                 normas: "• Não consumir bebida alcoólica ou entorpecentes; • Paralisar atividade sempre que constatar perigo grave e iminente; • Não executar tarefas para as quais não foi treinado, autorizado e habilitado.",
@@ -929,36 +820,77 @@
             };
         }
 
-        // FUNÇÃO DE POPULAR O BANCO DE DADOS AUTOMATICAMENTE (100% OFFLINE)
-        function checkAndPopulateDatabase() {
-            if (!db.cargos || db.cargos.length === 0) {
-                const list = [];
-                let idCounter = 1;
-                
-                for (const sectorName in DEFAULT_CARGOS_BY_SECTOR) {
-                    const cargoList = DEFAULT_CARGOS_BY_SECTOR[sectorName];
-                    const hazard = SECTOR_HAZARDS[sectorName] || {
-                        agentes: "", medidas: "", epis: "", epcs: "", peric: "Não caracteriza conforme NR 16", insal: "Não caracteriza conforme NR 15"
-                    };
-                    
-                    cargoList.forEach(item => {
-                        list.push({
-                            id: idCounter++,
-                            nome: item.nome,
-                            setor: sectorName,
-                            desc: item.desc,
-                            agentes: hazard.agentes,
-                            medidas: hazard.medidas,
-                            epis: hazard.epis,
-                            epcs: hazard.epcs,
-                            peric: hazard.peric,
-                            insal: hazard.insal
-                        });
-                    });
+        // Função de normalização das nomenclaturas de setor entre o TSV e as matrizes de perigo
+        function mapSectorName(sectorRaw) {
+            const s = sectorRaw.trim();
+            if (s === "DG") return "DG - DISTRIBUIÇÃO GERAL";
+            if (s === "SUPERVISÃO ALMOX") return "SUPERVISÃO ALMOXARIFADO";
+            if (s === "INST EQUIPAMENTOS B2B") return "INSTALADORES DE EQUIPAMENTOS B2B";
+            if (s === "GERÊNCIA ADMINISTRATIVO") return "GERÊNCIAS ADMINISTRATIVO";
+            if (s === "ESCRITÓRIO SERVIÇOS") return "MONITOR ESCRITÓRIO DE SERVIÇOS";
+            if (s === "REDE / CABISTA ") return "REDE / CABISTA";
+            return s;
+        }
+
+        // Importação Assíncrona e Mapeamento de cargos de arquivo TSV externo
+        async function buildDatabaseFromTSV() {
+            if (db.cargos && db.cargos.length > 0) return;
+
+            try {
+                // Requisição assíncrona para buscar o arquivo TSV externo
+                const response = await fetch('cargos_pgr.tsv');
+                if (!response.ok) {
+                    throw new Error(`Falha de comunicação (Status: ${response.status})`);
                 }
-                db.cargos = list;
-                saveDB();
+                const tsvText = await response.text();
+                processTSVText(tsvText);
+            } catch (err) {
+                console.error("Não foi possível carregar o arquivo tsv externo:", err);
+                alert("Aviso: O arquivo 'cargos_pgr.tsv' não foi carregado automaticamente.\n\n" +
+                      "Se você estiver executando o sistema localmente (file://), as diretrizes de segurança (CORS) do navegador podem bloquear essa operação.\n" +
+                      "Para carregar a matriz corretamente, execute a aplicação através de um servidor local.");
             }
+        }
+
+        // Processamento dos dados estruturados do TSV
+        function processTSVText(tsvText) {
+            const lines = tsvText.trim().split('\n');
+            const cargos = [];
+            let idCounter = 1;
+
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i];
+                if (!line.trim()) continue;
+                const cols = line.split('\t');
+                if (cols.length < 4) continue;
+
+                const ghs = cols[0].trim();
+                const cargoNome = cols[1].trim().toUpperCase();
+                const setorRaw = cols[2].trim();
+                const desc = cols[3].trim();
+
+                const mappedSetor = mapSectorName(setorRaw);
+                const hazard = SECTOR_HAZARDS[mappedSetor] || {
+                    agentes: "", medidas: "", epis: "", epcs: "", peric: "Não caracteriza conforme NR 16", insal: "Não caracteriza conforme NR 15"
+                };
+
+                cargos.push({
+                    id: idCounter++,
+                    ghs: ghs,
+                    nome: cargoNome,
+                    setor: mappedSetor,
+                    desc: desc,
+                    agentes: hazard.agentes,
+                    medidas: hazard.medidas,
+                    epis: hazard.epis,
+                    epcs: hazard.epcs,
+                    peric: hazard.peric,
+                    insal: hazard.insal
+                });
+            }
+
+            db.cargos = cargos;
+            saveDB();
         }
 
         function saveDB() { 
@@ -989,7 +921,7 @@
 
         // LÓGICA DO GERADOR
         async function initGerador() {
-            checkAndPopulateDatabase(); // Cadastra todos os cargos automaticamente caso estejam em branco
+            await buildDatabaseFromTSV();
             
             const s = document.getElementById('selSetor');
             s.innerHTML = '<option value="">Escolha...</option>' + db.setores.map(x => `<option value="${x}">${x}</option>`).join('');
@@ -1044,6 +976,7 @@
             document.getElementById('selCargo').innerHTML = '<option value="">Escolha a Função...</option>' + cargos.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
         }
 
+        // LIMPEZA DE TEXTO PARA OS AGENTES DE RISCOS
         function cleanAgentText(agent) {
             let cleaned = agent.trim();
             cleaned = cleaned.replace(/^[pP]\d+\s*[-–—.]*\s*/g, ''); 
@@ -1051,7 +984,7 @@
             return cleaned;
         }
 
-        // RISCOS COLORIDOS
+        // AGRUPAMENTO E FORMATAÇÃO DE RISCOS
         function formatRisksGrouped(text) {
             if (!text || text.trim() === '-' || text.trim() === '') return '-';
             const items = text.split(/[;\n|]/);
@@ -1126,6 +1059,7 @@
             return hasContent ? html : '-';
         }
 
+        // HIGIENIZADOR DE LISTA DE EPIS E EPCS
         function cleanPreventativeList(str) {
             if (!str || str.trim() === '-' || str.trim() === '') return [];
             return str.split(/[;\n\t]/)
@@ -1159,6 +1093,7 @@
                 }, []);
         }
 
+        // FORMATADOR DE MEDIDAS PREVENTIVAS INTEGRADO (EPI / EPC / ADM)
         function formatPreventativeMeasures(medidasRaw, episRaw, epcsRaw) {
             const listMedidas = cleanPreventativeList(medidasRaw);
             const listEpis = cleanPreventativeList(episRaw);
@@ -1207,6 +1142,7 @@
             document.getElementById('vInsalubridade').innerHTML = `<p class="section-text">${c.insal || "Não caracteriza conforme NR 15"}</p>`;
         }
 
+        // SINCRONIZAÇÃO EM TEMPO REAL
         function sync() {
             document.getElementById('vNomePreview').innerText = document.getElementById('inNome').value.toUpperCase() || '-';
             document.getElementById('vREPreview').innerText = document.getElementById('inRE').value || '-';
@@ -1232,6 +1168,7 @@
             saveDB();
         }
 
+        // LOGOTIPO PERSONALIZADO (BASE64)
         function handleLogoUpload(event) {
             const file = event.target.files[0];
             if (file) {
@@ -1245,12 +1182,14 @@
             }
         }
 
+        // REMOVER LOGO
         function removerLogo() {
             db.config.logo = "";
             saveDB();
             applyLogo();
         }
 
+        // IMPORTAÇÃO DE PLANILHA (BULK UPLOAD) COM LIMITADOR DE 100 NOMES
         function handleBulkUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1310,6 +1249,7 @@
                         });
                         
                         if (list.length > 0) {
+                            // Aplicando limitador lógico de 100 registros para garantir a estabilidade
                             if (list.length > 100) {
                                 alert(`Aviso: O arquivo enviado possui ${list.length} funcionários. Por motivos de desempenho, a lista foi limitada aos primeiros 100 nomes.`);
                                 list = list.slice(0, 100);
@@ -1343,6 +1283,7 @@
                         });
                         
                         if (list.length > 0) {
+                            // Aplicando limitador lógico de 100 registros
                             if (list.length > 100) {
                                 alert(`Aviso: O arquivo enviado possui ${list.length} funcionários. Por motivos de desempenho, a lista foi limitada aos primeiros 100 nomes.`);
                                 list = list.slice(0, 100);
@@ -1396,6 +1337,7 @@
                 </tr>`).join('');
         }
 
+        // CONFIGURAR ESPECIALIDADE (ABRE MODAL)
         function openCargoModal() {
             document.getElementById('c-id').value = "";
             document.getElementById('modal-title').innerText = "Novo Cargo";
@@ -1492,6 +1434,7 @@
             }
         }
 
+        // EXPORTAÇÃO INDIVIDUAL - CONFIGURAÇÃO APERFEIÇOADA PARA IMPEDIR QUEBRAS E CORTES
         function exportPDF() {
             if (bulkEmployees.length > 0) {
                 if (confirm(`Foi detectada uma lista de ${bulkEmployees.length} funcionários em lote. Deseja emitir todas as Ordens de Serviço juntas em um arquivo compactado ZIP?`)) {
@@ -1521,6 +1464,7 @@
             });
         }
 
+        // GERAÇÃO DE LOTE COM COMPACTAÇÃO EM ZIP (INDIVIDUAIS SALVOS NA PASTA)
         async function exportBulkPDF() {
             const modal = document.getElementById('loading-modal');
             const progressEl = document.getElementById('bulk-progress');
@@ -1530,6 +1474,7 @@
             totalEl.innerText = bulkEmployees.length;
             modal.style.display = 'flex';
 
+            // Guardar os valores originais para restabelecer o preview no final
             const originalNome = document.getElementById('inNome').value;
             const originalRE = document.getElementById('inRE').value;
 
@@ -1540,6 +1485,7 @@
                 return;
             }
 
+            // Inicializa a instância do compactador ZIP
             const zip = new JSZip();
             const element = document.getElementById('osPreview');
 
@@ -1550,14 +1496,17 @@
                     const emp = bulkEmployees[i];
                     progressEl.innerText = i + 1;
 
+                    // Injeta dados do colaborador atual e executa o sync
                     document.getElementById('inNome').value = emp.nome;
                     document.getElementById('inRE').value = emp.re;
                     
                     sync();
-                    void element.offsetHeight; 
+                    void element.offsetHeight; // Força recálculo de layout do DOM
 
+                    // Intervalo para a renderização visual das fontes na tela
                     await new Promise(resolve => setTimeout(resolve, 150));
 
+                    // Captura e renderiza em alta definição de forma flexível e adaptativa
                     const canvas = await html2canvas(element, {
                         scale: 2, 
                         letterRendering: true,
@@ -1568,6 +1517,7 @@
 
                     const imgData = canvas.toDataURL('image/jpeg', 0.95);
 
+                    // Cria um documento PDF de uma única folha para o respectivo colaborador
                     const individualPdf = new jsPDFClass({
                         orientation: 'portrait',
                         unit: 'mm',
@@ -1576,14 +1526,18 @@
                     
                     individualPdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
 
+                    // Extrai o binário (blob) do documento individual
                     const pdfBlob = individualPdf.output('blob');
 
+                    // Saneia o nome para o arquivo não gerar erros no sistema de arquivos
                     const nomeSaneado = emp.nome.replace(/[/\\?%*:|"<>]/g, '-').toUpperCase();
                     const reSaneado = emp.re ? emp.re : 'SEM_RE';
                     
+                    // Adiciona o arquivo correspondente na pasta raiz do arquivo ZIP
                     zip.file(`OS_${reSaneado}_${nomeSaneado}.pdf`, pdfBlob);
                 }
 
+                // Compacta todos os arquivos em um único ZIP e aciona o download
                 const zipContent = await zip.generateAsync({ type: "blob" });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(zipContent);
@@ -1596,6 +1550,7 @@
                 console.error("Erro no processamento em lote:", error);
                 alert("Ocorreu um erro inesperado: " + error.message);
             } finally {
+                // Restaura os valores para o preview da interface
                 document.getElementById('inNome').value = originalNome;
                 document.getElementById('inRE').value = originalRE;
                 sync();
