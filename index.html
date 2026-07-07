@@ -517,7 +517,7 @@
         const SECTOR_HAZARDS = {
             "OBRAS REDE": {
                 agentes: "Acidentes: Trabalho em altura acima de 2 metros ; Choque elétrico ; Acidente de trânsito em transporte motorizado ; Queda de mesmo nível ; Queda com diferença de nível de até 2 metros ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos | Físicos: Radiação não ionizante ; Ruído ocupacional | Ergonômicos: Exigência de flexões frequentes della coluna vertebral ; Frequente deslocamento a pé durante a jornada de trabalho ; Levantamento e transporte manual de cargas ; Exigência de elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saude mental e bem-estar",
-                medidas: "Treinamento e manutenção preventiva ; Instalação de proteções físicas e sinalizações de segurança ; Uso de pisos antiderrapantes e atenção ao caminhar ; Inspeção e utilização de ferramentas adequadas ; Controle de acesso a áreas restritas ; Controle integrado de pragas e vetores ; Planejamento de posturas e organização dos postos de trabalho ; Pausas regulares e uso de luvas antivibração ; Gestão equilibrada de escalas de trabalho e metas realistas ; Programas corporativos de feedback profissional ; Apoio psicológico e initiatives de bem-estar",
+                medidas: "Treinamento e manutenção preventiva ; Instalação de proteções físicas e sinalizações de segurança ; Uso de pisos antiderrapantes e atenção ao caminhar ; Inspeção e utilização de ferramentas adequadas ; Controle de acesso a áreas restritas ; Controle integrado de pragas e vetores ; Planejamento de posturas e organization dos postos de trabalho ; Pausas regulares e uso de luvas antivibração ; Gestão equilibrada de escalas de trabalho e metas realistas ; Programas corporativos de feedback profissional ; Apoio psicológico e initiatives de bem-estar",
                 epis: "Capacete H700 com aba frontal ; Botina com biqueira de composite e solado de borracha ; Luva mista de vaqueta cano curto ; Perneira de segurança ; Capa de chuva impermeável ; Luva de proteção mista de vaqueta ; Óculos de segurança contra impactos ; Colete refletivo tipo X ; Protetor auricular tipo concha",
                 epcs: "Telemetria veicular ; Cones de sinalização refletivos",
                 peric: "Não caracteriza conforme NR 16",
@@ -901,8 +901,6 @@
 
         // LÓGICA DO GERADOR
         async function initGerador() {
-            await buildDatabaseFromTSV();
-            
             const s = document.getElementById('selSetor');
             s.innerHTML = '<option value="">Escolha...</option>' + db.setores.map(x => `<option value="${x}">${x}</option>`).join('');
             
@@ -947,7 +945,7 @@
 
             saveDB();
             applyTextos();
-            alert("Textos padrões atualizados e salvos com sucesso!");
+            alert("Textos padrões updated e salvos com sucesso!");
         }
 
         function updateMatriz() {
@@ -1386,6 +1384,7 @@
             closeModals();
         }
 
+        // APAGAR SETORES E CARGOS
         function deleteCargo(id) { if(confirm("Excluir esta função?")) { db.cargos = db.cargos.filter(c => c.id !== id); saveDB(); renderAdmin(); } }
         
         function openSetorModal() {
@@ -1414,7 +1413,7 @@
             }
         }
 
-        // EXPORTAÇÃO INDIVIDUAL - CONFIGURAÇÃO APERFEIÇOADA PARA IMPEDIR QUEBRAS E CORTES
+        // EXPORTAÇÃO INDIVIDUAL
         function exportPDF() {
             if (bulkEmployees.length > 0) {
                 if (confirm(`Foi detectada uma lista de ${bulkEmployees.length} funcionários em lote. Deseja emitir todas as Ordens de Serviço juntas em um arquivo compactado ZIP?`)) {
@@ -1444,7 +1443,7 @@
             });
         }
 
-        // GERAÇÃO DE LOTE COM COMPACTAÇÃO EM ZIP (INDIVIDUAIS SALVOS NA PASTA)
+        // GERAÇÃO DE LOTE COM COMPACTAÇÃO EM ZIP
         async function exportBulkPDF() {
             const modal = document.getElementById('loading-modal');
             const progressEl = document.getElementById('bulk-progress');
@@ -1454,7 +1453,6 @@
             totalEl.innerText = bulkEmployees.length;
             modal.style.display = 'flex';
 
-            // Guardar os valores originais para restabelecer o preview no final
             const originalNome = document.getElementById('inNome').value;
             const originalRE = document.getElementById('inRE').value;
 
@@ -1465,7 +1463,6 @@
                 return;
             }
 
-            // Inicializa a instância do compactador ZIP
             const zip = new JSZip();
             const element = document.getElementById('osPreview');
 
@@ -1476,17 +1473,14 @@
                     const emp = bulkEmployees[i];
                     progressEl.innerText = i + 1;
 
-                    // Injeta dados do colaborador atual e executa o sync
                     document.getElementById('inNome').value = emp.nome;
                     document.getElementById('inRE').value = emp.re;
                     
                     sync();
-                    void element.offsetHeight; // Força recálculo de layout do DOM
+                    void element.offsetHeight; 
 
-                    // Intervalo para a renderização visual das fontes na tela
                     await new Promise(resolve => setTimeout(resolve, 150));
 
-                    // Captura e renderiza em alta definição de forma flexível e adaptativa
                     const canvas = await html2canvas(element, {
                         scale: 2, 
                         letterRendering: true,
@@ -1497,7 +1491,6 @@
 
                     const imgData = canvas.toDataURL('image/jpeg', 0.95);
 
-                    // Cria um documento PDF de uma única folha para o respectivo colaborador
                     const individualPdf = new jsPDFClass({
                         orientation: 'portrait',
                         unit: 'mm',
@@ -1506,18 +1499,14 @@
                     
                     individualPdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
 
-                    // Extrai o binário (blob) do documento individual
                     const pdfBlob = individualPdf.output('blob');
 
-                    // Saneia o nome para o arquivo não gerar erros no sistema de arquivos
                     const nomeSaneado = emp.nome.replace(/[/\\?%*:|"<>]/g, '-').toUpperCase();
                     const reSaneado = emp.re ? emp.re : 'SEM_RE';
                     
-                    // Adiciona o arquivo correspondente na pasta raiz do arquivo ZIP
                     zip.file(`OS_${reSaneado}_${nomeSaneado}.pdf`, pdfBlob);
                 }
 
-                // Compacta todos os arquivos em um único ZIP e aciona o download
                 const zipContent = await zip.generateAsync({ type: "blob" });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(zipContent);
@@ -1530,7 +1519,6 @@
                 console.error("Erro no processamento em lote:", error);
                 alert("Ocorreu um erro inesperado: " + error.message);
             } finally {
-                // Restaura os valores para o preview da interface
                 document.getElementById('inNome').value = originalNome;
                 document.getElementById('inRE').value = originalRE;
                 sync();
