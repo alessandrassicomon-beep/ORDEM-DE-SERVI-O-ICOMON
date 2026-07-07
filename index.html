@@ -832,26 +832,6 @@
             return s;
         }
 
-        // Importação Assíncrona e Mapeamento de cargos de arquivo TSV externo
-        async function buildDatabaseFromTSV() {
-            if (db.cargos && db.cargos.length > 0) return;
-
-            try {
-                // Requisição assíncrona para buscar o arquivo TSV externo
-                const response = await fetch('cargos_pgr.tsv');
-                if (!response.ok) {
-                    throw new Error(`Falha de comunicação (Status: ${response.status})`);
-                }
-                const tsvText = await response.text();
-                processTSVText(tsvText);
-            } catch (err) {
-                console.error("Não foi possível carregar o arquivo tsv externo:", err);
-                alert("Aviso: O arquivo 'cargos_pgr.tsv' não foi carregado automaticamente.\n\n" +
-                      "Se você estiver executando o sistema localmente (file://), as diretrizes de segurança (CORS) do navegador podem bloquear essa operação.\n" +
-                      "Para carregar a matriz corretamente, execute a aplicação através de um servidor local.");
-            }
-        }
-
         // Processamento dos dados estruturados do TSV
         function processTSVText(tsvText) {
             const lines = tsvText.trim().split('\n');
