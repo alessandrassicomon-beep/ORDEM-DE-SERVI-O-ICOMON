@@ -183,7 +183,7 @@
                     </div>
 
                     <div class="pt-4 border-t border-slate-100">
-                        <label class="text-[10px] font-black text-slate-400 uppercase">1. Área de Atuação</label>
+                        <label class="text-[10px] font-black text-slate-400 uppercase">1. Área de Atuação / GHE</label>
                         <select id="selSetor" class="w-full border-2 border-slate-100 p-3 rounded-xl text-sm mt-1 bg-slate-50 font-semibold text-slate-700" onchange="updateMatriz()"></select>
                     </div>
                     
@@ -254,7 +254,7 @@
                     <!-- SUB-CABEÇALHO -->
                     <table class="os-table">
                         <tr>
-                            <td width="35%"><span class="text-[6pt] block font-bold uppercase text-slate-500">Setor:</span><span id="vSetor" class="font-bold uppercase text-[7.5pt]">-</span></td>
+                            <td width="35%"><span class="text-[6pt] block font-bold uppercase text-slate-500">Setor / GHE:</span><span id="vSetor" class="font-bold uppercase text-[7.5pt]">-</span></td>
                             <td width="40%"><span class="text-[6pt] block font-bold uppercase text-slate-500">Função:</span><span id="vCargo" class="font-bold uppercase text-[7.5pt]">-</span></td>
                             <td width="25%"><span class="text-[6pt] block font-bold uppercase text-slate-500">Data de Emissão:</span><span id="vDataAtu" class="font-bold text-[7.5pt]">-</span></td>
                         </tr>
@@ -352,31 +352,31 @@
         <div class="max-w-7xl mx-auto space-y-8">
             <div class="flex justify-between items-end">
                 <div>
-                    <h2 class="text-3xl font-black text-slate-900 uppercase">Matriz de Inteligência</h2>
-                    <p class="text-slate-500 text-sm">Configure os dados mestre, parametrize adicionais e edite requisitos dos cargos.</p>
+                    <h2 class="text-3xl font-black text-slate-900 uppercase">Matriz de Inteligência GHE</h2>
+                    <p class="text-slate-500 text-sm">Configure os riscos padrão por Setor/GHE ou configure detalhes específicos para cada Cargo.</p>
                 </div>
                 <div class="flex gap-3">
-                    <button onclick="openSetorModal()" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl text-xs font-black">+ SETOR</button>
+                    <button onclick="openSetorModal()" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl text-xs font-black">+ NOVO SETOR/GHE</button>
                     <button onclick="openCargoModal()" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl text-xs font-black">+ CARGO/RISCO</button>
                 </div>
             </div>
 
             <!-- DASHBOARD ADMIN -->
-            <div class="grid lg:grid-cols-[300px_1fr] gap-8">
+            <div class="grid lg:grid-cols-[350px_1fr] gap-8">
                 <div class="bg-white p-6 rounded-3xl shadow-sm border col-span-1">
-                    <h3 class="font-black uppercase text-[10px] text-slate-400 mb-4 tracking-widest">Setores Disponíveis</h3>
-                    <div id="admin-setores" class="space-y-2 max-h-[500px] overflow-y-auto pr-1"></div>
+                    <h3 class="font-black uppercase text-[10px] text-slate-400 mb-4 tracking-widest">Setores / GHEs Cadastrados</h3>
+                    <div id="admin-setores" class="space-y-2 max-h-[550px] overflow-y-auto pr-1"></div>
                 </div>
                 <div class="bg-white rounded-3xl shadow-sm border overflow-hidden">
                     <div class="p-4 bg-slate-50 border-b flex justify-between items-center">
-                        <h3 class="font-black uppercase text-[10px] text-slate-400 tracking-widest">Cargos e Matriz de Riscos</h3>
+                        <h3 class="font-black uppercase text-[10px] text-slate-400 tracking-widest">Lista de Cargos e Exceções</h3>
                         <input type="text" id="searchAdmin" placeholder="Filtrar cargo..." class="text-xs p-1.5 border rounded-lg outline-none" oninput="renderAdmin()">
                     </div>
                     <table class="w-full text-left text-sm">
                         <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400">
                             <tr>
                                 <th class="p-4">Função</th>
-                                <th class="p-4">Setor</th>
+                                <th class="p-4">Setor / GHE</th>
                                 <th class="p-4 text-center">Ações</th>
                             </tr>
                         </thead>
@@ -432,14 +432,15 @@
     <div id="modal-cargo" class="modal">
         <input type="hidden" id="c-id">
         <div class="bg-white p-8 rounded-[32px] w-full max-w-4xl shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
-            <h3 id="modal-title" class="text-2xl font-black mb-6 text-slate-900 uppercase">Configurar Especialidade</h3>
+            <h3 id="modal-title" class="text-2xl font-black mb-1 text-slate-900 uppercase">Configurar Especialidade</h3>
+            <p class="text-slate-400 text-xs mb-6">Insira os dados da função. Deixe os campos de riscos em branco se quiser herdar os valores padrão do Setor/GHE.</p>
             <div class="grid grid-cols-2 gap-6 mb-6">
                 <div>
                     <label class="text-[10px] font-black text-slate-400 uppercase">Nome da Função</label>
                     <input id="c-nome" type="text" class="w-full border-2 p-3 rounded-xl mt-1 outline-none focus:border-blue-500 uppercase font-semibold">
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-400 uppercase">Setor Base</label>
+                    <label class="text-[10px] font-black text-slate-400 uppercase">Setor Base / GHE</label>
                     <select id="c-setor" class="w-full border-2 p-3 rounded-xl mt-1 outline-none focus:border-blue-500 font-semibold bg-slate-50"></select>
                 </div>
             </div>
@@ -448,36 +449,77 @@
                 <textarea id="c-desc" class="w-full border-2 p-3 rounded-xl mt-1 h-20 outline-none focus:border-blue-500 text-xs font-medium"></textarea>
             </div>
             <div class="mb-6">
-                <label class="text-[10px] font-black text-orange-400 uppercase">Riscos / Agentes Associados (Separados por ponto e vírgula ';')</label>
-                <textarea id="c-agentes" class="w-full border-2 border-orange-50 p-3 rounded-xl mt-1 h-20 text-xs outline-none focus:border-orange-500 font-medium"></textarea>
+                <label class="text-[10px] font-black text-orange-400 uppercase">Riscos / Agentes ADICIONAIS deste cargo (Opcional - Separar por ';')</label>
+                <textarea id="c-agentes" placeholder="Ex: Fumos metálicos de soldagem" class="w-full border-2 border-orange-50 p-3 rounded-xl mt-1 h-20 text-xs outline-none focus:border-orange-500 font-medium"></textarea>
             </div>
             <div class="grid grid-cols-3 gap-4 mb-6">
                 <div>
-                    <label class="text-[10px] font-black text-blue-500 uppercase">Medidas Adm. / Coletivas</label>
+                    <label class="text-[10px] font-black text-blue-500 uppercase">Medidas Coletivas ADICIONAIS (Opcional)</label>
                     <textarea id="c-medidas" class="w-full border-2 border-blue-50 p-3 rounded-xl mt-1 h-24 text-xs outline-none focus:border-blue-500 font-medium"></textarea>
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-green-500 uppercase">EPIs Recomendados</label>
+                    <label class="text-[10px] font-black text-green-500 uppercase">EPIs ADICIONAIS (Opcional)</label>
                     <textarea id="c-epis" class="w-full border-2 border-green-50 p-3 rounded-xl mt-1 h-24 text-xs outline-none focus:border-green-500 font-medium"></textarea>
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-teal-600 uppercase">EPCs Recomendados</label>
+                    <label class="text-[10px] font-black text-teal-600 uppercase">EPCs ADICIONAIS (Opcional)</label>
                     <textarea id="c-epcs" class="w-full border-2 border-teal-50 p-3 rounded-xl mt-1 h-24 text-xs outline-none focus:border-teal-500 font-medium"></textarea>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-6 mb-6">
                 <div>
-                    <label class="text-[10px] font-black text-blue-500 uppercase">Caracterização Periculosidade</label>
-                    <input id="c-peric" type="text" placeholder="Caracteriza conforme NR 16" class="w-full border-2 p-3 rounded-xl mt-1 text-xs outline-none focus:border-blue-500 font-medium">
+                    <label class="text-[10px] font-black text-blue-500 uppercase">Caracterização Periculosidade (Deixe vazio para usar do Setor)</label>
+                    <input id="c-peric" type="text" placeholder="Herdado do Setor/GHE" class="w-full border-2 p-3 rounded-xl mt-1 text-xs outline-none focus:border-blue-500 font-medium">
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-teal-600 uppercase">Caracterização Insalubridade</label>
-                    <input id="c-insal" type="text" placeholder="Não caracteriza conforme NR 15" class="w-full border-2 p-3 rounded-xl mt-1 text-xs outline-none focus:border-teal-500 font-medium">
+                    <label class="text-[10px] font-black text-teal-600 uppercase">Caracterização Insalubridade (Deixe vazio para usar do Setor)</label>
+                    <input id="c-insal" type="text" placeholder="Herdado do Setor/GHE" class="w-full border-2 p-3 rounded-xl mt-1 text-xs outline-none focus:border-teal-500 font-medium">
                 </div>
             </div>
             <div class="flex gap-4">
                 <button onclick="closeModals()" class="flex-1 p-4 font-black text-slate-400 uppercase text-xs">Cancelar</button>
                 <button onclick="saveCargo()" class="flex-[2] p-4 bg-blue-600 text-white rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg shadow-blue-100">Salvar Matriz de Função</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIGURAÇÃO DE RISCOS DO SETOR / GHE -->
+    <div id="modal-setor" class="modal">
+        <input type="hidden" id="s-nome-id">
+        <div class="bg-white p-8 rounded-[32px] w-full max-w-4xl shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
+            <h3 class="text-2xl font-black mb-1 text-slate-900 uppercase">Configurar Riscos do Setor / GHE</h3>
+            <p id="modal-setor-title" class="text-blue-600 text-xs font-black uppercase mb-6"></p>
+            <div class="mb-6">
+                <label class="text-[10px] font-black text-orange-400 uppercase">Riscos / Agentes Padrão deste Setor (GHE) - Separar por ';'</label>
+                <textarea id="s-agentes" class="w-full border-2 border-orange-50 p-3 rounded-xl mt-1 h-20 text-xs outline-none focus:border-orange-500 font-medium"></textarea>
+            </div>
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div>
+                    <label class="text-[10px] font-black text-blue-500 uppercase">Medidas Adm. / Coletivas Padrão</label>
+                    <textarea id="s-medidas" class="w-full border-2 border-blue-50 p-3 rounded-xl mt-1 h-24 text-xs outline-none focus:border-blue-500 font-medium"></textarea>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-green-500 uppercase">EPIs Padrão do Setor</label>
+                    <textarea id="s-epis" class="w-full border-2 border-green-50 p-3 rounded-xl mt-1 h-24 text-xs outline-none focus:border-green-500 font-medium"></textarea>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-teal-600 uppercase">EPCs Padrão do Setor</label>
+                    <textarea id="s-epcs" class="w-full border-2 border-teal-50 p-3 rounded-xl mt-1 h-24 text-xs outline-none focus:border-teal-500 font-medium"></textarea>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="text-[10px] font-black text-blue-500 uppercase">Caracterização de Periculosidade Padrão</label>
+                    <input id="s-peric" type="text" class="w-full border-2 p-3 rounded-xl mt-1 text-xs outline-none focus:border-blue-500 font-medium">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-teal-600 uppercase">Caracterização de Insalubridade Padrão</label>
+                    <input id="s-insal" type="text" class="w-full border-2 p-3 rounded-xl mt-1 text-xs outline-none focus:border-teal-500 font-medium">
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="closeModals()" class="flex-1 p-4 font-black text-slate-400 uppercase text-xs">Cancelar</button>
+                <button onclick="saveSectorHazards()" class="flex-[2] p-4 bg-blue-600 text-white rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg shadow-blue-100">Salvar Riscos do Setor</button>
             </div>
         </div>
     </div>
@@ -513,7 +555,7 @@
             psicossocial: { name: "Psicossociais", color: "#9C27B0", keywords: ["carga de trabalho", "controle e autonomia", "suporte e liderança", "relações interpessoais", "reconhecimento", "condições organizacionais", "saúde mental", "psicossocial", "turno noturno"] }
         };
 
-        // MATRIZ DE RISCO COMPLETA DOS 33 SETORES
+        // MATRIZ DE RISCO COMPLETA DOS 33 SETORES (Utilizada como padrão inicial / Fallback)
         const SECTOR_HAZARDS = {
             "OBRAS REDE": {
                 agentes: "Acidentes: Trabalho em altura acima de 2 metros ; Choque elétrico ; Acidente de trânsito em transporte motorizado ; Queda de mesmo nível ; Queda com diferença de nível de até 2 metros ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos | Físicos: Radiação não ionizante ; Ruído ocupacional | Ergonômicos: Exigência de flexões frequentes della coluna vertebral ; Frequente deslocamento a pé durante a jornada de trabalho ; Levantamento e transporte manual de cargas ; Exigência de elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saude mental e bem-estar",
@@ -621,7 +663,7 @@
             },
             "FTTA-A": {
                 agentes: "Acidentes: Acidente de trânsito em transporte motorizado ; Queda com diferença de nível de até 2 metros ; Queda de mesmo nível ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos | Físicos: Radiação não ionizante | Ergonômicos: Frequente deslocamento a pé durante a jornada de trabalho ; Exigência de flexões frequentes da coluna vertebral ; Levantamento e transporte manual de cargas ; Exigência de elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Treinamento em direção defensiva e manutenção preventiva do veículo ; Instalação de proteções físicas e sinalizações ; Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Uso de ferramentas adequadas e conservadas ; Barreiras físicas e controle de acessos ; Controle de pragas e vetores ; Uso de protetor solar e pausas estruturadas sob sombra ; Organização espacial de ferramentas ; Ajuste de altura e ergonomia ; Treinamento de postura ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
+                medidas: "Treinamento em direção defensiva e manutenção preventiva do veículo ; Instalação de proteções físicas e sinalizações ; Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Uso de ferramentas adequadas e conservadas ; Barreiras físicas e controle de acessos ; Controle de pragas e vetores ; Uso de protetor solar e pausas estruturadas sob sombra ; Organização espacial de ferramentas ; Ajuste de altura e ergonomia ; Treinamento de postura ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programs corporativos de bem-estar",
                 epis: "Capacete H700 com aba frontal ; Botina com biqueira de composite e solado de borracha ; Luva mista de vaqueta cano curto ; Perneira de segurança ; Protetor solar com repelente",
                 epcs: "Telemetria veicular",
                 peric: "Caracteriza conforme NR 16",
@@ -719,7 +761,7 @@
                 agentes: "Acidentes: Trabalho em altura acima de 2 metros ; Trabalho em espaço confinado ; Ataque de animais ; Contato com animais peçonhentos ; Batida contra objeto ou estrutura ; Impacto de objeto ; Queda com diferença de nível de até 2 metros ; Queda de mesmo nível ; Cortes e perfurações por ferramentas ou materiais | Físicos: Radiação não ionizante ; Ruído ocupacional | Ergonômicos: Exigência de elevação frequente de membros superiores ; Exigência de flexões frequentes da coluna vertebral ; Levantamento e transporte manual de cargas ; Postura de pé por longos períodos ; Trabalho em posturas incômodas por longos períodos ; Frequente deslocamento a pé durante a jornada de trabalho | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
                 medidas: "Equipamentos de proteção para trabalho em altura ; Equipamentos para atividade em espaço confinado ; Barreiras físicas e controle de acessos ; Controle de pragas e vetores ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Proteção física e sinalização contra quedas ; Pisos antiderrapantes e atenção ao caminhar ; Uso de ferramentas adequadas e conservadas ; Uso de protetor solar e pausas estruturadas sob sombra ; Ajuste postural ; Treinamento ergonômico de postura ; Pausas para alternância postural ; Ajuste de mobiliário ; Organização espacial de ferramentas ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
                 epis: "Capacete tipo alpinista ; Cinturão de segurança tipo paraquedista com talabarte de posicionamento ; Talabarte em Y ; Óculos de segurança contra impactos com proteção UV ; Capacete H700 com aba frontal ; Luva mista de vaqueta cano curto ; Botina com biqueira de composite e solado de borracha ; Luva em poliuretano (PU) ; Botina em poliuretano (PU) ; Respirador semi-facial com filtro mecânico ; Perneira de segurança ; Protetor solar com repelente ; Protetor auricular tipo concha",
-                epcs: "Correia de segurança de couro para escada ; Kit de linha de vida móvel ; Nivelador de escada ; Garra meio de vão ; Detector de quatro gases ; Exaustor e insuflador de ar para espaço confinado ; Grade de sinalização de ferro ; Sinalizador luminoso intermitente ; Sistema de resgate com tripé e guincho autorresgatador",
+                epcs: "Correia de segurança de couro para escada ; Kit de linha de vida móvel ; Nivelador de escada ; Garra meio de vão ; Detector de quatro gases ; Exaustor e insuflador de ar para espaço confinado ; Grade de sinalização de ferro ; Sinalizador luminoso intermitente ; System de resgate com tripé e guincho autorresgatador",
                 peric: "Não caracteriza conforme NR 16",
                 insal: "Não caracteriza conforme NR 15"
             },
@@ -804,6 +846,33 @@
                 logo: ""
             }
         };
+
+        // Inicializa o banco de dados dinâmico de Riscos de Setor (GHE) se não existir
+        if (!db.sectorHazards) {
+            db.sectorHazards = JSON.parse(JSON.stringify(SECTOR_HAZARDS));
+            localStorage.setItem('icomon_pro_db_v4_colors', JSON.stringify(db)); 
+        }
+
+        // MIGRAÇÃO SILENCIOSA: Limpa os riscos gravados nas funções legadas (antigas)
+        // Isso garante que todos os cargos herdem 100% dos riscos configurados de forma dinâmica no Setor/GHE
+        if (db.cargos && db.cargos.length > 0) {
+            let houveLimpeza = false;
+            db.cargos.forEach(c => {
+                // Se as propriedades de risco não estiverem vazias, limpa elas
+                if (c.agentes !== "" || c.medidas !== "" || c.epis !== "" || c.epcs !== "" || c.peric !== "" || c.insal !== "") {
+                    c.agentes = "";
+                    c.medidas = "";
+                    c.epis = "";
+                    c.epcs = "";
+                    c.peric = "";
+                    c.insal = "";
+                    houveLimpeza = true;
+                }
+            });
+            if (houveLimpeza) {
+                localStorage.setItem('icomon_pro_db_v4_colors', JSON.stringify(db));
+            }
+        }
 
         // Lista de Funcionários para Emissão em Massa
         let bulkEmployees = [];
@@ -897,22 +966,19 @@
                 }
                 seen.add(uniqueKey);
 
-                const hazard = SECTOR_HAZARDS[mappedSetor] || {
-                    agentes: "", medidas: "", epis: "", epcs: "", peric: "Não caracteriza conforme NR 16", insal: "Não caracteriza conforme NR 15"
-                };
-
+                // No novo modelo de herança pura, deixamos as propriedades de risco do cargo vazias inicialmente
                 cargos.push({
                     id: idCounter++,
                     ghs: ghs,
                     nome: cargoNome,
                     setor: mappedSetor,
                     desc: desc,
-                    agentes: hazard.agentes,
-                    medidas: hazard.medidas,
-                    epis: hazard.epis,
-                    epcs: hazard.epcs,
-                    peric: hazard.peric,
-                    insal: hazard.insal
+                    agentes: "",
+                    medidas: "",
+                    epis: "",
+                    epcs: "",
+                    peric: "",
+                    insal: ""
                 });
             }
 
@@ -994,7 +1060,7 @@
 
             saveDB();
             applyTextos();
-            alert("Textos padrões atualizados e salvos com sucesso!");
+            alert("Textos padrões updated e salvos!");
         }
 
         function updateMatriz() {
@@ -1154,19 +1220,45 @@
             return hasContent ? html : '-';
         }
 
+        // Auxiliar para juntar o padrão do setor/GHE com as exceções específicas do Cargo
+        function combineSSTTexts(sectorText, cargoText) {
+            const s = (sectorText && sectorText.trim() !== '-' && sectorText.trim() !== '') ? sectorText.trim() : '';
+            const c = (cargoText && cargoText.trim() !== '-' && cargoText.trim() !== '') ? cargoText.trim() : '';
+            if (s && c) {
+                return s + " ; " + c; // Funde as strings separando por ponto e vírgula
+            }
+            return s || c || '-';
+        }
+
         function applyData() {
             const id = document.getElementById('selCargo').value;
             const c = db.cargos.find(x => x.id == id);
             if(!c) return;
+
+            // Puxa o GHE (Setor) do banco de dados dinâmico de riscos
+            const sectorHazards = (db.sectorHazards && db.sectorHazards[c.setor]) || {
+                agentes: "", medidas: "", epis: "", epcs: "", peric: "Não caracteriza conforme NR 16", insal: "Não caracteriza conforme NR 15"
+            };
+
+            // Junta as definições do Setor com as do Cargo
+            const combinedAgentes = combineSSTTexts(sectorHazards.agentes, c.agentes);
+            const combinedMedidas = combineSSTTexts(sectorHazards.medidas, c.medidas);
+            const combinedEpis = combineSSTTexts(sectorHazards.epis, c.epis);
+            const combinedEpcs = combineSSTTexts(sectorHazards.epcs, c.epcs);
+
+            // Caracterização da Exposição (Se o cargo tiver uma caracterização específica, usa ela. Senão herda a do GHE).
+            const combinedPeric = (c.peric && c.peric.trim() !== '') ? c.peric.trim() : (sectorHazards.peric || "Não caracteriza conforme NR 16");
+            const combinedInsal = (c.insal && c.insal.trim() !== '') ? c.insal.trim() : (sectorHazards.insal || "Não caracteriza conforme NR 15");
+
             document.getElementById('vSetor').innerText = c.setor;
             document.getElementById('vCargo').innerText = c.nome;
             document.getElementById('vDesc').innerHTML = `<p class="section-text">${c.desc}</p>`;
             
-            document.getElementById('vAgentes').innerHTML = formatRisksGrouped(c.agentes);
-            document.getElementById('vMedidas').innerHTML = formatPreventativeMeasures(c.medidas, c.epis, c.epcs);
+            document.getElementById('vAgentes').innerHTML = formatRisksGrouped(combinedAgentes);
+            document.getElementById('vMedidas').innerHTML = formatPreventativeMeasures(combinedMedidas, combinedEpis, combinedEpcs);
             
-            document.getElementById('vPericulosidade').innerHTML = `<p class="section-text">${c.peric || "Não caracteriza conforme NR 16"}</p>`;
-            document.getElementById('vInsalubridade').innerHTML = `<p class="section-text">${c.insal || "Não caracteriza conforme NR 15"}</p>`;
+            document.getElementById('vPericulosidade').innerHTML = `<p class="section-text">${combinedPeric}</p>`;
+            document.getElementById('vInsalubridade').innerHTML = `<p class="section-text">${combinedInsal}</p>`;
         }
 
         // SINCRONIZAÇÃO EM TEMPO REAL
@@ -1276,7 +1368,6 @@
                         });
                         
                         if (list.length > 0) {
-                            // Aplicando limitador lógico de 100 registros para garantir a estabilidade
                             if (list.length > 100) {
                                 alert(`Aviso: O arquivo enviado possui ${list.length} funcionários. Por motivos de desempenho, a lista foi limitada aos primeiros 100 nomes.`);
                                 list = list.slice(0, 100);
@@ -1310,7 +1401,6 @@
                         });
                         
                         if (list.length > 0) {
-                            // Aplicando limitador lógico de 100 registros
                             if (list.length > 100) {
                                 alert(`Aviso: O arquivo enviado possui ${list.length} funcionários. Por motivos de desempenho, a lista foi limitada aos primeiros 100 nomes.`);
                                 list = list.slice(0, 100);
@@ -1346,7 +1436,10 @@
             document.getElementById('admin-setores').innerHTML = db.setores.map(s => `
                 <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl border">
                     <span class="font-bold text-xs uppercase">${s}</span>
-                    <button onclick="deleteSetor('${s}')" class="text-slate-300 hover:text-red-500 font-bold">✕</button>
+                    <div class="flex gap-2">
+                        <button onclick="editSectorHazards('${s}')" class="text-blue-600 hover:text-blue-800 text-xs font-bold mr-1">⚙️ Riscos</button>
+                        <button onclick="deleteSetor('${s}')" class="text-slate-300 hover:text-red-500 font-bold">✕</button>
+                    </div>
                 </div>`).join('');
 
             const search = document.getElementById('searchAdmin').value.toLowerCase();
@@ -1364,6 +1457,43 @@
                 </tr>`).join('');
         }
 
+        // CONFIGURAR RISCOS GERAIS DO SETOR (GHE)
+        function editSectorHazards(sectorName) {
+            const sectorData = db.sectorHazards[sectorName] || {
+                agentes: "", medidas: "", epis: "", epcs: "", peric: "Não caracteriza conforme NR 16", insal: "Não caracteriza conforme NR 15"
+            };
+
+            document.getElementById('s-nome-id').value = sectorName;
+            document.getElementById('modal-setor-title').innerText = sectorName;
+            document.getElementById('s-agentes').value = sectorData.agentes || "";
+            document.getElementById('s-medidas').value = sectorData.medidas || "";
+            document.getElementById('s-epis').value = sectorData.epis || "";
+            document.getElementById('s-epcs').value = sectorData.epcs || "";
+            document.getElementById('s-peric').value = sectorData.peric || "Não caracteriza conforme NR 16";
+            document.getElementById('s-insal').value = sectorData.insal || "Não caracteriza conforme NR 15";
+
+            document.getElementById('modal-setor').classList.add('active');
+        }
+
+        // SALVAR RISCOS DO SETOR/GHE NO BANCO DINÂMICO
+        function saveSectorHazards() {
+            const sectorName = document.getElementById('s-nome-id').value;
+            if (!sectorName) return;
+
+            db.sectorHazards[sectorName] = {
+                agentes: document.getElementById('s-agentes').value,
+                medidas: document.getElementById('s-medidas').value,
+                epis: document.getElementById('s-epis').value,
+                epcs: document.getElementById('s-epcs').value,
+                peric: document.getElementById('s-peric').value,
+                insal: document.getElementById('s-insal').value
+            };
+
+            saveDB();
+            closeModals();
+            alert(`Riscos do Setor/GHE "${sectorName}" salvos com sucesso!`);
+        }
+
         // CONFIGURAR ESPECIALIDADE (ABRE MODAL)
         function openCargoModal() {
             document.getElementById('c-id').value = "";
@@ -1374,8 +1504,8 @@
             document.getElementById('c-medidas').value = "";
             document.getElementById('c-epis').value = "";
             document.getElementById('c-epcs').value = "";
-            document.getElementById('c-peric').value = "Caracteriza conforme NR 16";
-            document.getElementById('c-insal').value = "Não caracteriza conforme NR 15";
+            document.getElementById('c-peric').value = "";
+            document.getElementById('c-insal').value = "";
             
             document.getElementById('c-setor').innerHTML = db.setores.map(s => `<option value="${s}">${s}</option>`).join('');
             document.getElementById('modal-cargo').classList.add('active');
@@ -1389,12 +1519,12 @@
             document.getElementById('modal-title').innerText = "Editar Cargo";
             document.getElementById('c-nome').value = c.nome;
             document.getElementById('c-desc').value = c.desc;
-            document.getElementById('c-agentes').value = c.agentes;
+            document.getElementById('c-agentes').value = c.agentes || "";
             document.getElementById('c-medidas').value = c.medidas || "";
             document.getElementById('c-epis').value = c.epis || "";
             document.getElementById('c-epcs').value = c.epcs || "";
-            document.getElementById('c-peric').value = c.peric || "Caracteriza conforme NR 16";
-            document.getElementById('c-insal').value = c.insal || "Não caracteriza conforme NR 15";
+            document.getElementById('c-peric').value = c.peric || "";
+            document.getElementById('c-insal').value = c.insal || "";
 
             document.getElementById('c-setor').innerHTML = db.setores.map(s => `
                 <option value="${s}" ${s === c.setor ? 'selected' : ''}>${s}</option>
@@ -1418,7 +1548,7 @@
             if (id) {
                 const index = db.cargos.findIndex(x => x.id == id);
                 if (index !== -1) {
-                    db.cargos[index] = { ...db.cargos[index], nome, sector: sector, desc, agentes, medidas, epis, epcs, peric, insal };
+                    db.cargos[index] = { ...db.cargos[index], nome, setor: sector, desc, agentes, medidas, epis, epcs, peric, insal };
                 }
             } else {
                 const novo = {
@@ -1436,11 +1566,27 @@
         function deleteCargo(id) { if(confirm("Excluir esta função?")) { db.cargos = db.cargos.filter(c => c.id !== id); saveDB(); renderAdmin(); } }
         
         function openSetorModal() {
-            const n = prompt("Novo Setor:");
-            if(n) { db.setores.push(n.toUpperCase()); saveDB(); renderAdmin(); }
+            const n = prompt("Novo Setor / GHE:");
+            if(n) { 
+                const nSetor = n.toUpperCase().trim();
+                db.setores.push(nSetor); 
+                // Inicializa os riscos padrão vazios para o novo setor
+                db.sectorHazards[nSetor] = {
+                    agentes: "", medidas: "", epis: "", epcs: "", peric: "Não caracteriza conforme NR 16", insal: "Não caracteriza conforme NR 15"
+                };
+                saveDB(); 
+                renderAdmin(); 
+            }
         }
 
-        function deleteSetor(s) { if(confirm("Excluir setor?")) { db.setores = db.setores.filter(x => x !== s); saveDB(); renderAdmin(); } }
+        function deleteSetor(s) { 
+            if(confirm(`Excluir o setor/GHE "${s}"?`)) { 
+                db.setores = db.setores.filter(x => x !== s); 
+                delete db.sectorHazards[s];
+                saveDB(); 
+                renderAdmin(); 
+            } 
+        }
 
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
 
