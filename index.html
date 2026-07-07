@@ -852,24 +852,51 @@
             }
         }
 
-        // Processamento dos dados estruturados do TSV
+        // Processamento inteligente do TSV com remoção automática de duplicatas (Suporta 3 ou 4 colunas)
         function processTSVText(tsvText) {
             const lines = tsvText.trim().split('\n');
             const cargos = [];
             let idCounter = 1;
 
+            // Conjunto para controle e remoção de duplicatas
+            const seen = new Set();
+
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i];
                 if (!line.trim()) continue;
                 const cols = line.split('\t');
-                if (cols.length < 4) continue;
+                
+                // Aceita tanto arquivos de 3 quanto de 4 colunas de forma estável
+                if (cols.length < 3) continue; 
 
-                const ghs = cols[0].trim();
-                const cargoNome = cols[1].trim().toUpperCase();
-                const setorRaw = cols[2].trim();
-                const desc = cols[3].trim();
+                let ghs = "";
+                let cargoNome = "";
+                let setorRaw = "";
+                let desc = "";
+
+                if (cols.length >= 4) {
+                    // Arquivo de 4 colunas (GHS, CARGO, SETOR, DESCRIÇÃO)
+                    ghs = cols[0].trim();
+                    cargoNome = cols[1].trim().toUpperCase();
+                    setorRaw = cols[2].trim();
+                    desc = cols[3].trim();
+                } else {
+                    // Arquivo de 3 colunas (CARGO, SETOR, DESCRIÇÃO)
+                    ghs = "";
+                    cargoNome = cols[0].trim().toUpperCase();
+                    setorRaw = cols[1].trim();
+                    desc = cols[2].trim();
+                }
 
                 const mappedSetor = mapSectorName(setorRaw);
+
+                // Evita que o mesmo cargo seja cadastrado mais de uma vez no mesmo setor
+                const uniqueKey = `${mappedSetor}|${cargoNome}`;
+                if (seen.has(uniqueKey)) {
+                    continue; 
+                }
+                seen.add(uniqueKey);
+
                 const hazard = SECTOR_HAZARDS[mappedSetor] || {
                     agentes: "", medidas: "", epis: "", epcs: "", peric: "Não caracteriza conforme NR 16", insal: "Não caracteriza conforme NR 15"
                 };
@@ -1391,7 +1418,7 @@
             if (id) {
                 const index = db.cargos.findIndex(x => x.id == id);
                 if (index !== -1) {
-                    db.cargos[index] = { ...db.cargos[index], nome, setor: sector, desc, agentes, medidas, epis, epcs, peric, insal };
+                    db.cargos[index] = { ...db.cargos[index], nome, sector: sector, desc, agentes, medidas, epis, epcs, peric, insal };
                 }
             } else {
                 const novo = {
