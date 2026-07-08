@@ -5,36 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICOMON - Sistema de Gestão SST v2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Bibliotecas de Renderização PDF e Canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Biblioteca SheetJS para leitura de arquivos Excel (.xlsx) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- Biblioteca JSZip para compactação de arquivos -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        *, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Roboto', sans-serif; background-color: #f1f5f9; }
-        .page-a4 {
-            width: 794px; height: 1120px; padding: 20px 26px; margin: 0 auto;
-            background: white; color: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            display: flex; flex-direction: column; overflow: hidden;
+        /* Reset de dimensionamento global */
+        *, ::before, ::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-        .os-table { width: 100% !important; border-collapse: collapse; flex-shrink: 0; }
-        .os-table td { border: 1px solid #000; padding: 4px 6px; vertical-align: middle; font-size: 6.8pt; }
-        .os-section { page-break-inside: avoid; display: flex; flex-direction: column; margin-top: -1px; }
-        .section-label { background: #f1f1f1; font-weight: 900; text-transform: uppercase; font-size: 6.8pt; border: 1px solid #000; padding: 5px 6px; display: block; width: 100%; }
-        .section-box { border-left: 1px solid #000; border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 6px 8px; text-align: justify; font-size: 6.8pt; display: block; width: 100%; background: #fff; line-height: 1.4; }
+
+        body { 
+            font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            background-color: #f1f5f9; 
+        }
+        
+        /* Layout A4 Fixo com Flexbox Inteligente em Pixels */
+        .page-a4 {
+            width: 794px;
+            height: 1120px;
+            max-width: 794px;
+            min-width: 794px;
+            flex-shrink: 0;   
+            padding: 20px 26px; 
+            margin: 0 auto;
+            background: white;
+            color: #000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow: hidden;
+        }
+
+        /* Força fonte sem serifa, line-height e desativa decorações injetadas por corretores */
+        .page-a4, .page-a4 * {
+            font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.5em; 
+            text-decoration: none !important; /* Remove sublinhados indesejados de extensões */
+            box-sizing: border-box;
+        }
+
+        /* Garante que tabelas e seções ocupem exatamente a mesma largura útil */
+        .os-table, .os-section { 
+            width: 100% !important; 
+            border-collapse: collapse; 
+            flex-shrink: 0; 
+            box-sizing: border-box;
+        }
+        
+        .os-table td { 
+            border: 1px solid #000; 
+            padding: 4px 6px; 
+            vertical-align: middle; 
+            font-size: 6.8pt;
+        }
+
+        /* Evita linhas duplas nas tabelas encostadas */
+        .os-table + .os-table td {
+            border-top: none;
+        }
+
+        /* Container de bloco para isolar seções e impedir quebras internas */
+        .os-section {
+            page-break-inside: avoid;
+            break-inside: avoid;
+            display: flex;
+            flex-direction: column;
+            margin-top: -1px; /* Resolve problemas de linha dupla entre blocos */
+        }
+
+        /* Títulos Cinzas das Seções - Espaçamento e Alinhamento Melhorados */
+        .section-label { 
+            background: #f1f1f1; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            font-size: 6.8pt; 
+            border: 1px solid #000;
+            padding: 5px 6px; /* Aumentado para o texto não encostar nas bordas */
+            display: block;
+            width: 100%;
+            line-height: 1.2; /* Garante centralização vertical estável */
+        }
+        
+        /* Caixas de Conteúdo das Seções */
+        .section-box { 
+            border-left: 1px solid #000;
+            border-right: 1px solid #000;
+            border-bottom: 1px solid #000;
+            padding: 6px 8px; /* Aumentado para dar margem interna ao texto */
+            text-align: justify; 
+            font-size: 6.8pt; 
+            display: block;
+            width: 100%;
+            background: #fff;
+            line-height: 1.4; /* Espaçamento entre linhas confortável */
+        }
+
+        /* Parágrafos internos de caixas */
+        .section-text {
+            font-size: 6.8pt;
+            line-height: 1.5em;
+            text-align: justify;
+            word-wrap: break-word;
+        }
+
+        /* Rodapé de Assinatura Dinâmico */
+        .signature-block {
+            margin-top: auto;
+            width: 100%;
+            flex-shrink: 0;
+        }
+        
+        /* Tabs e Navegação */
         .tab-btn.active { @apply bg-blue-700 text-white shadow-inner; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        /* Modais */
         .modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .modal.active { display: flex; }
-        @media print { .no-print { display: none !important; } }
+
+        @media print {
+            .no-print { display: none !important; }
+        }
     </style>
 </head>
 <body class="text-slate-800">
 
-    <!-- BARRA DE NAVEGAÇÃO ORIGINAL -->
+    <!-- BARRA DE NAVEGAÇÃO -->
     <nav class="no-print bg-slate-900 text-white p-4 sticky top-0 z-50 shadow-md">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
@@ -52,42 +162,96 @@
     <!-- ABA 1: GERADOR -->
     <div id="tab-gerador" class="tab-content active p-6">
         <div class="max-w-[1400px] mx-auto grid lg:grid-cols-[400px_1fr] gap-8">
+            
+            <!-- BARRA LATERAL DE PARÂMETROS -->
             <aside class="no-print space-y-6">
                 <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-200 space-y-5">
-                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Parâmetros do Funcionário</h2>
-                    <input id="inNome" type="text" placeholder="Nome Completo" class="w-full border-2 p-3 rounded-xl text-sm uppercase font-medium" oninput="sync()">
-                    <div class="grid grid-cols-2 gap-3">
-                        <input id="inRE" type="text" placeholder="RE" class="w-full border-2 p-3 rounded-xl text-sm font-medium" oninput="sync()">
-                        <input id="inData" type="date" class="w-full border-2 p-3 rounded-xl text-sm font-medium" oninput="sync()">
-                    </div>
-                    <input id="inProjeto" type="text" placeholder="Projeto / Cliente (Ex: VIVO)" class="w-full border-2 p-3 rounded-xl text-sm uppercase font-medium" oninput="sync()">
                     
-                    <div class="pt-4 border-t">
-                        <label class="text-[10px] font-black text-slate-400 uppercase">1. Área de Atuação / GHE</label>
-                        <select id="selSetor" class="w-full border-2 p-3 rounded-xl text-sm mt-1 bg-slate-50 font-semibold" onchange="updateMatriz()"></select>
-                    </div>
                     <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase">2. Cargo / Especialidade</label>
-                        <select id="selCargo" class="w-full border-2 p-3 rounded-xl text-sm mt-1 font-bold text-blue-900" onchange="applyData()"></select>
+                        <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Parâmetros do Funcionário</h2>
+                        <div class="space-y-3">
+                            <input id="inNome" type="text" placeholder="Nome Completo" class="w-full border-2 border-slate-100 p-3 rounded-xl text-sm focus:border-blue-500 outline-none transition-all uppercase font-medium" oninput="sync()">
+                            
+                            <div class="grid grid-cols-2 gap-3">
+                                <input id="inRE" type="text" placeholder="RE" class="w-full border-2 border-slate-100 p-3 rounded-xl text-sm outline-none focus:border-blue-500 font-medium" oninput="sync()">
+                                <input id="inData" type="date" class="w-full border-2 border-slate-100 p-3 rounded-xl text-sm outline-none text-slate-500 font-medium" oninput="sync()">
+                            </div>
+                            
+                            <!-- Campo do Projeto/Cliente -->
+                            <input id="inProjeto" type="text" placeholder="Projeto / Cliente (Ex: VIVO)" class="w-full border-2 border-slate-100 p-3 rounded-xl text-sm focus:border-blue-500 outline-none transition-all uppercase font-medium" oninput="sync()">
+                        </div>
                     </div>
 
-                    <button onclick="exportPDF()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black uppercase text-xs hover:bg-blue-700 transition-all">Exportar PDF</button>
+                    <div class="pt-4 border-t border-slate-100">
+                        <label class="text-[10px] font-black text-slate-400 uppercase">1. Área de Atuação / GHE</label>
+                        <select id="selSetor" class="w-full border-2 border-slate-100 p-3 rounded-xl text-sm mt-1 bg-slate-50 font-semibold text-slate-700" onchange="updateMatriz()"></select>
+                    </div>
+                    
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase">2. Cargo / Especialidade</label>
+                        <select id="selCargo" class="w-full border-2 border-slate-200 p-3 rounded-xl text-sm mt-1 font-bold text-blue-900 bg-white" onchange="applyData()"></select>
+                    </div>
+
+                    <!-- SEÇÃO DE EMISSÃO EM MASSA -->
+                    <div class="pt-4 border-t border-slate-100 space-y-2">
+                        <label class="text-[10px] font-black text-blue-600 uppercase block tracking-wider">3. Emissão em Massa (Opcional - Máx. 100)</label>
+                        <input type="file" id="upload-massa" accept=".xlsx, .xls, .xml" class="w-full border-2 border-slate-100 p-2.5 rounded-xl text-xs bg-slate-50 font-semibold text-slate-700 mt-1 cursor-pointer" onchange="handleBulkUpload(event)">
+                        <div id="bulk-status" class="hidden mt-2 p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs font-medium text-blue-800 flex justify-between items-center">
+                            <span><strong id="bulk-count">0</strong> funcionários carregados</span>
+                            <button onclick="clearBulk()" class="text-red-600 hover:text-red-800 font-bold underline text-xs">Limpar</button>
+                        </div>
+                    </div>
+
+                    <!-- SEÇÃO DO RESPONSÁVEL EMISSOR -->
+                    <div class="pt-4 border-t border-slate-100 space-y-3">
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Responsável pela Emissão</h3>
+                        <div class="space-y-2">
+                            <input id="inRespNome" type="text" placeholder="Nome do Responsável SST" class="w-full border-2 border-slate-100 p-3 rounded-xl text-sm focus:border-blue-500 outline-none transition-all uppercase font-medium" oninput="syncResponsavel()">
+                            <input id="inRespRE" type="text" placeholder="RE do Responsável" class="w-full border-2 border-slate-100 p-3 rounded-xl text-sm focus:border-blue-500 outline-none font-medium" oninput="syncResponsavel()">
+                        </div>
+                    </div>
+
+                    <!-- CONFIGURAÇÃO DO LOGOTIPO DA EMPRESA -->
+                    <div class="pt-4 border-t border-slate-100 space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase block">Logotipo Personalizado</label>
+                        <div class="flex gap-2">
+                            <label class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-center py-2 px-3 rounded-xl text-xs font-bold cursor-pointer transition-all">
+                                <span>Selecionar Imagem</span>
+                                <input type="file" id="upload-logo" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
+                            </label>
+                            <button id="btn-remover-logo" onclick="removerLogo()" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded-xl text-xs font-bold hidden transition-all">Remover</button>
+                        </div>
+                    </div>
+
+                    <button onclick="exportPDF()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all active:scale-95">Exportar PDF</button>
                 </div>
             </aside>
 
-            <!-- PREVIEW DA OS (LAYOUT A4 ORIGINAL) -->
+            <!-- PREVIEW DA OS -->
             <main class="overflow-x-auto p-1 bg-slate-300 rounded-3xl border shadow-inner">
-                <div id="osPreview" class="page-a4">
+                <div id="osPreview" class="page-a4" spellcheck="false">
+                    
+                    <!-- CABEÇALHO -->
                     <table class="os-table">
                         <tr>
-                            <td width="20%" class="text-center"><div class="font-black text-blue-600 text-xl">ICOMON</div></td>
-                            <td width="60%" class="text-center">
-                                <div class="font-black text-[10pt] uppercase">Ordem de Serviço de Segurança e Saúde no Trabalho</div>
-                                <div class="text-[7pt] font-bold">Conforme NR-1 e Programa de Gerenciamento de Riscos (PGR)</div>
+                            <td width="20%" class="text-center">
+                                <div id="logo-container" class="flex items-center justify-center min-h-[46px] max-h-[46px]">
+                                    <svg id="default-logo" class="w-9 h-9 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                        <path d="M12 8v8M8 12h8"/>
+                                    </svg>
+                                    <img id="custom-logo" class="max-h-[44px] max-w-[120px] hidden object-contain">
+                                </div>
                             </td>
-                            <td width="20%" class="text-center font-bold">F-SGI-71<br>REV.02</td>
+                            <td width="60%" class="text-center">
+                                <div class="font-black text-[10pt] uppercase tracking-tighter leading-tight">Ordem de Serviço de Segurança e Saúde no Trabalho</div>
+                                <div class="text-[7pt] font-bold text-slate-800 mt-0.5">Conforme NR-1 e Programa de Gerenciamento de Riscos (PGR)</div>
+                            </td>
+                            <td width="20%" class="text-center font-bold text-[7.5pt]">F-SGI-71<br>REV.02</td>
                         </tr>
                     </table>
+
+                    <!-- SUB-CABEÇALHO -->
                     <table class="os-table">
                         <tr>
                             <td width="35%"><span class="text-[6pt] block font-bold uppercase text-slate-500">Setor / GHE:</span><span id="vSetor" class="font-bold uppercase text-[7.5pt]">-</span></td>
@@ -96,100 +260,434 @@
                         </tr>
                     </table>
 
-                    <div class="os-section"><div class="section-label">1. Descrição Detalhada da Função</div><div class="section-box" id="vDesc">-</div></div>
-                    <div class="os-section"><div class="section-label">2. Agentes Associados às Atividades (Riscos)</div><div class="section-box" id="vAgentes">-</div></div>
-                    <div class="os-section"><div class="section-label">3. Medidas Preventivas Obrigatórias (EPI / EPC)</div><div class="section-box" id="vMedidas">-</div></div>
-                    <div class="os-section"><div class="section-label">4. Recomendações de saúde e segurança</div><div class="section-box" id="pRecomendacoes"></div></div>
-                    <div class="os-section"><div class="section-label">5. Procedimentos em caso de acidentes</div><div class="section-box" id="pAcidentes"></div></div>
-                    <div class="os-section"><div class="section-label">6. Procedimentos de segurança</div><div class="section-box" id="pProcedimentos"></div></div>
+                    <!-- SEÇÕES ISOLADAS COM COMPORTAMENTO DE BLOCO CONTÍNUO -->
+                    <div class="os-section">
+                        <div class="section-label">1. Descrição Detalhada da Função</div>
+                        <div class="section-box" id="vDesc">-</div>
+                    </div>
+
+                    <div class="os-section">
+                        <div class="section-label">2. Agentes Associados às Atividades (Riscos)</div>
+                        <div class="section-box" id="vAgentes">-</div>
+                    </div>
+
+                    <div class="os-section">
+                        <div class="section-label">3. Medidas Preventivas Obrigatórias (EPI / EPC)</div>
+                        <div class="section-box" id="vMedidas">-</div>
+                    </div>
+
+                    <div class="os-section">
+                        <div class="section-label">4. Recomendações de saúde e segurança</div>
+                        <div class="section-box" id="pRecomendacoes"></div>
+                    </div>
+
+                    <div class="os-section">
+                        <div class="section-label">5. Procedimentos em caso de acidentes do trabalho</div>
+                        <div class="section-box" id="pAcidentes"></div>
+                    </div>
+
+                    <div class="os-section">
+                        <div class="section-label">6. Procedimentos de segurança</div>
+                        <div class="section-box" id="pProcedimentos"></div>
+                    </div>
 
                     <div class="os-section">
                         <div class="section-label">7. Caracterização da exposição</div>
                         <table class="os-table">
-                            <tr><td width="60%"><b>Adicional de Periculosidade:</b></td><td id="vPericulosidade">...</td></tr>
-                            <tr><td width="60%"><b>Adicional de Insalubridade:</b></td><td id="vInsalubridade">...</td></tr>
+                            <tr>
+                                <td width="60%" class="font-bold text-[7pt]">Adicional de Periculosidade:</td>
+                                <td width="40%" id="vPericulosidade" class="text-[7pt]">Caracteriza conforme NR 16</td>
+                            </tr>
+                            <tr>
+                                <td width="60%" class="font-bold text-[7pt]">Adicional de Insalubridade:</td>
+                                <td width="40%" id="vInsalubridade" class="text-[7pt]">Não caracteriza conforme NR 15</td>
+                            </tr>
                         </table>
                     </div>
 
-                    <!-- ASSINATURAS -->
-                    <div class="mt-auto flex border border-black">
-                        <div class="w-1/3 p-2 border-r border-black text-center"><div class="text-[6pt] font-black uppercase">Data</div><div id="vDataEmissao" class="text-sm font-black"></div></div>
-                        <div class="w-2/3 p-2"><div class="text-[6pt] font-black uppercase">Assinatura do Funcionário</div><div class="text-[7pt]">NOME: <span id="vNomePreview" class="font-black"></span></div>RE: <span id="vREPreview"></span></div>
+                    <div class="os-section">
+                        <div class="section-label">8. Termo de responsabilidade</div>
+                        <div class="section-box" id="pResponsabilidade"></div>
+                    </div>
+
+                    <div class="os-section">
+                        <div class="section-label">9. Normas internas</div>
+                        <div class="section-box" id="pNormas"></div>
+                    </div>
+
+                    <div class="os-section">
+                        <div class="section-label">10. Direito de recusa / DECLARAÇÕES</div>
+                        <div class="section-box" id="pRecusa"></div>
+                    </div>
+
+                    <!-- ASSINATURAS MANUAIS -->
+                    <div class="flex border border-black signature-block">
+                        <div class="w-1/3 p-1 border-r border-black flex flex-col justify-between text-center bg-slate-50">
+                            <div class="text-[6pt] font-black uppercase text-slate-400">Data de Emissão</div>
+                            <div id="vDataEmissao" class="text-sm font-black py-1"></div>
+                        </div>
+                        <div class="w-2/3">
+                            <div class="p-1 border-b border-black min-h-[38px] flex flex-col justify-between">
+                                <div class="text-[6pt] font-black uppercase text-slate-400">Assinatura do Funcionário</div>
+                                <div class="text-[7pt]">NOME: <span id="vNomePreview" class="font-black uppercase">-</span></div>
+                                <div class="flex justify-between text-[6.5pt] leading-none">
+                                    <span>RE: <span id="vREPreview">-</span></span>
+                                    <span>PROJETO: <span id="vProjetoPreview" class="font-bold uppercase">-</span></span>
+                                </div>
+                            </div>
+                            <div class="p-1 min-h-[38px] flex flex-col justify-between">
+                                <div class="text-[6pt] font-black uppercase text-slate-400">Responsável Segurança do Trabalho</div>
+                                <div class="text-[7pt]">NOME: <span id="vRespNomePreview" class="font-black uppercase">-</span></div>
+                                <div class="text-[6.5pt]">RE: <span id="vRespREPreview">-</span></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>
         </div>
     </div>
 
-    <!-- SCRIPT DE INTELIGÊNCIA -->
+    <!-- ABA 2: ADMINISTRAÇÃO PROFISSIONAL -->
+    <div id="tab-admin" class="tab-content p-8">
+        <div class="max-w-7xl mx-auto space-y-8">
+            <div class="flex justify-between items-end">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-900 uppercase">Matriz de Inteligência GHE</h2>
+                    <p class="text-slate-500 text-sm">Configure os riscos padrão por Setor/GHE ou configure detalhes específicos para cada Cargo.</p>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="openSetorModal()" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl text-xs font-black">+ NOVO SETOR/GHE</button>
+                    <button onclick="openCargoModal()" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl text-xs font-black">+ CARGO/RISCO</button>
+                </div>
+            </div>
+
+            <!-- DASHBOARD ADMIN -->
+            <div class="grid lg:grid-cols-[350px_1fr] gap-8">
+                <div class="bg-white p-6 rounded-3xl shadow-sm border col-span-1">
+                    <h3 class="font-black uppercase text-[10px] text-slate-400 mb-4 tracking-widest">Setores / GHEs Cadastrados</h3>
+                    <div id="admin-setores" class="space-y-2 max-h-[550px] overflow-y-auto pr-1"></div>
+                </div>
+                <div class="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                    <div class="p-4 bg-slate-50 border-b flex justify-between items-center">
+                        <h3 class="font-black uppercase text-[10px] text-slate-400 tracking-widest">Lista de Cargos e Exceções</h3>
+                        <input type="text" id="searchAdmin" placeholder="Filtrar cargo..." class="text-xs p-1.5 border rounded-lg outline-none" oninput="renderAdmin()">
+                    </div>
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400">
+                            <tr>
+                                <th class="p-4">Função</th>
+                                <th class="p-4">Setor / GHE</th>
+                                <th class="p-4 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-admin-cargos"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABA 3: TEXTOS PADRÕES DO DOCUMENTO -->
+    <div id="tab-textos" class="tab-content p-8">
+        <div class="max-w-5xl mx-auto space-y-6">
+            <div>
+                <h2 class="text-3xl font-black text-slate-900 uppercase">Textos Padrões do Documento</h2>
+                <p class="text-slate-500 text-sm">Configure aqui os blocos de texto que são aplicados por padrão em todas as Ordens de Serviço produzidas (pode usar HTML básico como <b>&lt;br&gt;</b> para pular linhas ou <b>&lt;b&gt;negrito&lt;/b&gt;</b>).</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded-[24px] border shadow-sm">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider">4. Recomendações de saúde e segurança</label>
+                    <textarea id="txt-recomendacoes" class="w-full border-2 p-3 rounded-xl h-28 text-xs outline-none focus:border-blue-500 font-medium leading-relaxed"></textarea>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider">5. Procedimentos em caso de acidentes</label>
+                    <textarea id="txt-acidentes" class="w-full border-2 p-3 rounded-xl h-28 text-xs outline-none focus:border-blue-500 font-medium leading-relaxed"></textarea>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider">6. Procedimentos de segurança</label>
+                    <textarea id="txt-procedimentos" class="w-full border-2 p-3 rounded-xl h-28 text-xs outline-none focus:border-blue-500 font-medium leading-relaxed"></textarea>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider">8. Termo de responsabilidade</label>
+                    <textarea id="txt-responsabilidade" class="w-full border-2 p-3 rounded-xl h-28 text-xs outline-none focus:border-blue-500 font-medium leading-relaxed"></textarea>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider">9. Normas internas</label>
+                    <textarea id="txt-normas" class="w-full border-2 p-3 rounded-xl h-28 text-xs outline-none focus:border-blue-500 font-medium leading-relaxed"></textarea>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider">10. Direito de recusa / DECLARAÇÕES</label>
+                    <textarea id="txt-recusa" class="w-full border-2 p-3 rounded-xl h-28 text-xs outline-none focus:border-blue-500 font-medium leading-relaxed"></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <button onclick="saveTextos()" class="bg-blue-600 hover:bg-blue-700 text-white font-black px-8 py-3.5 rounded-xl text-xs uppercase tracking-widest shadow-lg shadow-blue-200 transition-all active:scale-95">Salvar Textos Padrões</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CARGO -->
+    <div id="modal-cargo" class="modal">
+        <input type="hidden" id="c-id">
+        <div class="bg-white p-8 rounded-[32px] w-full max-w-4xl shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
+            <h3 id="modal-title" class="text-2xl font-black mb-1 text-slate-900 uppercase">Configurar Especialidade</h3>
+            <p class="text-slate-400 text-xs mb-6">Insira os dados da função. Deixe os campos de riscos em branco se quiser herdar os valores padrão do Setor/GHE.</p>
+            <div class="grid grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase">Nome da Função</label>
+                    <input id="c-nome" type="text" class="w-full border-2 p-3 rounded-xl mt-1 outline-none focus:border-blue-500 uppercase font-semibold">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase">Setor Base / GHE</label>
+                    <select id="c-setor" class="w-full border-2 p-3 rounded-xl mt-1 outline-none focus:border-blue-500 font-semibold bg-slate-50"></select>
+                </div>
+            </div>
+            <div class="mb-6">
+                <label class="text-[10px] font-black text-slate-400 uppercase">Descrição Técnica da Atividade</label>
+                <textarea id="c-desc" class="w-full border-2 p-3 rounded-xl mt-1 h-20 outline-none focus:border-blue-500 text-xs font-medium"></textarea>
+            </div>
+            <div class="mb-6">
+                <label class="text-[10px] font-black text-orange-400 uppercase">Riscos / Agentes ADICIONAIS deste cargo (Opcional - Separar por ';')</label>
+                <textarea id="c-agentes" placeholder="Ex: Fumos metálicos de soldagem" class="w-full border-2 border-orange-50 p-3 rounded-xl mt-1 h-20 text-xs outline-none focus:border-orange-500 font-medium"></textarea>
+            </div>
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div>
+                    <label class="text-[10px] font-black text-blue-500 uppercase">Medidas Coletivas ADICIONAIS (Opcional)</label>
+                    <textarea id="c-medidas" class="w-full border-2 border-blue-50 p-3 rounded-xl mt-1 h-24 text-xs outline-none focus:border-blue-500 font-medium"></textarea>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-green-500 uppercase">EPIs ADICIONAIS (Opcional)</label>
+                    <textarea id="c-epis" class="w-full border-2 border-green-50 p-3 rounded-xl mt-1 h-24 text-xs outline-none focus:border-green-500 font-medium"></textarea>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-teal-600 uppercase">EPCs ADICIONAIS (Opcional)</label>
+                    <textarea id="c-epcs" class="w-full border-2 border-teal-50 p-3 rounded-xl mt-1 h-24 text-xs outline-none focus:border-teal-500 font-medium"></textarea>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="text-[10px] font-black text-blue-500 uppercase">Caracterização Periculosidade (Deixe vazio para usar do Setor)</label>
+                    <input id="c-peric" type="text" placeholder="Herdado do Setor/GHE" class="w-full border-2 p-3 rounded-xl mt-1 text-xs outline-none focus:border-blue-500 font-medium">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-teal-600 uppercase">Caracterização Insalubridade (Deixe vazio para usar do Setor)</label>
+                    <input id="c-insal" type="text" placeholder="Herdado do Setor/GHE" class="w-full border-2 p-3 rounded-xl mt-1 text-xs outline-none focus:border-teal-500 font-medium">
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="closeModals()" class="flex-1 p-4 font-black text-slate-400 uppercase text-xs">Cancelar</button>
+                <button onclick="saveCargo()" class="flex-[2] p-4 bg-blue-600 text-white rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg shadow-blue-100">Salvar Matriz de Função</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIGURAÇÃO DE RISCOS DO SETOR / GHE -->
+    <div id="modal-setor" class="modal">
+        <input type="hidden" id="s-nome-id">
+        <div class="bg-white p-8 rounded-[32px] w-full max-w-4xl shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
+            <h3 class="text-2xl font-black mb-1 text-slate-900 uppercase">Configurar Riscos do Setor / GHE</h3>
+            <p id="modal-setor-title" class="text-blue-600 text-xs font-black uppercase mb-6"></p>
+            <div class="mb-6">
+                <label class="text-[10px] font-black text-orange-400 uppercase">Riscos / Agentes Padrão deste Setor (GHE) - Separar por ';'</label>
+                <textarea id="s-agentes" class="w-full border-2 border-orange-50 p-3 rounded-xl mt-1 h-20 text-xs outline-none focus:border-orange-500 font-medium"></textarea>
+            </div>
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div>
+                    <label class="text-[10px] font-black text-blue-500 uppercase">Medidas Adm. / Coletivas Padrão</label>
+                    <textarea id="s-medidas" class="w-full border-2 border-blue-50 p-3 rounded-xl mt-1 h-24 text-xs outline-none focus:border-blue-500 font-medium"></textarea>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-green-500 uppercase">EPIs Padrão do Setor</label>
+                    <textarea id="s-epis" class="w-full border-2 border-green-50 p-3 rounded-xl mt-1 h-24 text-xs outline-none focus:border-green-500 font-medium"></textarea>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-teal-600 uppercase">EPCs Padrão do Setor</label>
+                    <textarea id="s-epcs" class="w-full border-2 border-teal-50 p-3 rounded-xl mt-1 h-24 text-xs outline-none focus:border-teal-500 font-medium"></textarea>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="text-[10px] font-black text-blue-500 uppercase">Caracterização de Periculosidade Padrão</label>
+                    <input id="s-peric" type="text" class="w-full border-2 p-3 rounded-xl mt-1 text-xs outline-none focus:border-blue-500 font-medium">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-teal-600 uppercase">Caracterização de Insalubridade Padrão</label>
+                    <input id="s-insal" type="text" class="w-full border-2 p-3 rounded-xl mt-1 text-xs outline-none focus:border-teal-500 font-medium">
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="closeModals()" class="flex-1 p-4 font-black text-slate-400 uppercase text-xs">Cancelar</button>
+                <button onclick="saveSectorHazards()" class="flex-[2] p-4 bg-blue-600 text-white rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg shadow-blue-100">Salvar Riscos do Setor</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CARREGAMENTO (GERAÇÃO DE LOTE) -->
+    <div id="loading-modal" class="modal no-print flex items-center justify-center" style="display: none; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); z-index: 9999;">
+        <div class="bg-slate-900 text-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center space-y-4 border border-slate-700">
+            <div class="flex justify-center">
+                <svg class="animate-spin h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </div>
+            <h3 class="text-sm font-black uppercase tracking-wider text-slate-100">Gerando Lote ZIP</h3>
+            <p class="text-xs text-slate-400">Processando <span id="bulk-progress" class="font-bold text-blue-400">0</span> de <span id="bulk-total" class="font-bold">0</span> funcionários.</p>
+            <p class="text-[9px] text-slate-500 uppercase tracking-widest">Por favor, aguarde...</p>
+        </div>
+    </div>
+
     <script>
+        // Forçar mapeamento global imediato do jsPDF após carregamento do CDN
+        if (window.jspdf && !window.jsPDF) {
+            window.jsPDF = window.jspdf.jsPDF;
+        }
+
+        // DEFINIÇÃO DA MATRIZ DE CATEGORIAS DE RISCO SST
         const RISK_CATEGORIES = {
-            acidente: { name: "Acidentes", color: "#2196F3", keywords: ["queda", "choque", "transporte", "batida", "impacto", "corte", "perfura", "animal", "peçonhento", "altura", "confinado", "trânsito", "suspensa"] },
-            ergonomico: { name: "Ergonômicos", color: "#FF9800", keywords: ["postura", "ergon", "coluna", "levantamento", "peso", "repetitivo", "pedais", "sentado", "visualização", "flexões", "deslocamento", "membros"] },
-            fisico: { name: "Físicos", color: "#4CAF50", keywords: ["ruído", "vibração", "radiação", "calor", "frio", "pressão", "umidade"] },
-            biologico: { name: "Biológicos", color: "#795548", keywords: ["lixo", "coleta", "infecto", "paciente", "vírus", "bactéria", "contaminado"] },
-            quimico: { name: "Químicos", color: "#F44336", keywords: ["cloro", "chumbo", "manganês", "poeira", "fumo", "névoa", "gás", "vapor", "solda"] },
-            psicossocial: { name: "Psicossociais", color: "#9C27B0", keywords: ["carga de trabalho", "autonomia", "liderança", "interpessoais", "reconhecimento", "saúde mental", "noturno"] }
+            acidente: { name: "Acidentes", color: "#2196F3", keywords: ["queda", "choque", "transporte", "batida", "impacto", "corte", "perfura", "animal", "animais", "peçonhento", "incêndio", "explosão", "altura", "confinado", "trânsito", "suspensa", "físico intenso"] },
+            ergonomico: { name: "Ergonômicos", color: "#FF9800", keywords: ["postura", "ergon", "coluna", "levantamento", "transporte manual", "peso", "esforço", "repetitivo", "pedais", "pé por longo", "sentado por longo", "visualização", "flexões", "deslocamento a pé", "incômoda", "membros superiores", "digitação", "teclado", "reflexos", "telas"] },
+            fisico: { name: "Físicos", color: "#4CAF50", keywords: ["ruído", "vibração", "radiação", "calor", "frio", "pressão", "umidade", "temperatura"] },
+            biologico: { name: "Biológicos", color: "#795548", keywords: ["lixo", "coleta", "infecto", "paciente", "vírus", "bactéria", "fungo", "parasita", "contaminado", "biológico", "doenças"] },
+            quimico: { name: "Químicos", color: "#F44336", keywords: ["cloro", "chumbo", "manganês", "poeira", "fumo", "névoa", "neblina", "gás", "vapor", "substância", "químico", "solda"] },
+            psicossocial: { name: "Psicossociais", color: "#9C27B0", keywords: ["carga de trabalho", "controle e autonomia", "suporte e liderança", "relações interpessoais", "reconhecimento", "condições organizacionais", "saúde mental", "psicossocial", "turno noturno"] }
         };
 
-        let db = JSON.parse(localStorage.getItem('icomon_v2026_db')) || {
-            setores: [], cargos: [], sectorHazards: {}, 
-            config: { respNome: "VICTOR SILVA SOARES", respRE: "50622" },
-            textos: {
-                recomendacoes: "• Obedeça às normas de saúde e segurança; • Obedeça às leis de trânsito; • Respeite a sinalização; • Comunique riscos imediatamente.",
-                acidentes: "Todo acidente deve ser comunicado ao Gestor imediatamente. A CAT será emitida em até 24h úteis.",
-                procedimentos: "• Atenção ao caminhar; • Atravesse na faixa; • Cumpra as disposições de SST.",
-                responsabilidade: "A recusa ao cumprimento desta OS constitui ATO FALTOSO sujeito a penalidades.",
-                normas: "• Não consumir álcool; • Paralisar atividade em caso de perigo grave; • Não executar tarefas sem treinamento.",
-                recusa: "Garantimos o direito de recusa em caso de risco grave e iminente."
+        // MATRIZ DE RISCO COMPLETA DOS 33 SETORES (Fallback inicial)
+        const SECTOR_HAZARDS = {
+            "OBRAS REDE": {
+                agentes: "Acidentes: Trabalho em altura acima de 2 metros ; Choque elétrico ; Acidente de trânsito em transporte motorizado ; Queda de mesmo nível ; Queda com diferença de nível de até 2 metros ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos | Físicos: Radiação não ionizante ; Ruído ocupacional | Ergonômicos: Exigência de flexões frequentes della coluna vertebral ; Frequente deslocamento a pé durante a jornada de trabalho ; Levantamento e transporte manual de cargas ; Exigência de elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saude mental e bem-estar",
+                medidas: "Treinamento e manutenção preventiva ; Instalação de proteções físicas e sinalizações de segurança ; Uso de pisos antiderrapantes e atenção ao caminhar ; Inspeção e utilização de ferramentas adequadas ; Controle de acesso a áreas restritas ; Controle integrado de pragas e vetores ; Planejamento de posturas e organização dos postos de trabalho ; Pausas regulares e uso de luvas antivibração ; Gestão equilibrada de escalas de trabalho e metas realistas ; Programas corporativos de feedback profissional ; Apoio psicológico e initiatives de bem-estar",
+                epis: "Capacete H700 com aba frontal ; Botina com biqueira de composite e solado de borracha ; Luva mista de vaqueta cano curto ; Perneira de segurança ; Capa de chuva impermeável ; Luva de proteção mista de vaqueta ; Óculos de segurança contra impactos ; Colete refletivo tipo X ; Protetor auricular tipo concha",
+                epcs: "Telemetria veicular ; Cones de sinalização refletivos",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
             }
         };
 
-        async function initGerador() {
-            await loadTSVFiles();
-            populateSelectors();
-            applyTextos();
-            sync();
-        }
+        // BANCO DE DADOS PERSISTENTE
+        let db = JSON.parse(localStorage.getItem('icomon_pro_db_v4_colors')) || {
+            setores: [
+                "SUPERVISÃO OPERACIONAL", "ASSISTENCIA TÉCNICA", "COORDENAÇÃO OPERACIONAL",
+                "SUPERVISÃO REDE", "REDE / CABISTA", "SOLDA", "REPARO INTERNO",
+                "OPERAÇÃO MUNCK", "OBRAS REDE", "LABORATÓRIO", "MANUTENÇÃO PATRIMONIAL",
+                "OPERAÇÃO EMPILHADEIRA", "ALMOXARIFADO", "DG - DISTRIBUIÇÃO GERAL",
+                "OPERAÇÃO B2B", "FROTA", "AMBULATÓRIO QSMS", "SEGURANÇA DO TRABALHO",
+                "TRANSPORTE ADMINISTRATIVO", "SUPERVISÃO ALMOXARIFADO", "FTTA-A",
+                "INSTALADORES DE EQUIPAMENTOS B2B", "GERÊNCIAS ADMINISTRATIVO",
+                "COORDENAÇÃO ADMINISTRATIVO", "JURÍDICO ADMINISTRATIVO",
+                "CONSULTORES ADMINISTRATIVO", "ESPECIALISTAS ADMINISTRATIVO",
+                "ANALISTAS ADMINISTRATIVO", "SUPERVISÃO ADMINISTRATIVO",
+                "PROJETOS ADMINISTRATIVO", "ADMINISTRATIVO", "MONITOR ESCRITÓRIO DE SERVIÇOS",
+                "SEGURANÇA DO TRABALHO OBRAS"
+            ],
+            cargos: [],
+            sectorHazards: {},
+            config: { respNome: "VICTOR SILVA SOARES", respRE: "50622", logo: "" },
+            textos: {
+                recomendacoes: "• Obedeça às normas de saúde e segurança do trabalho da Icomon; • Obedeça às leis de trânsito e procedimentos da direção defensiva; • Respeite a sinalização de segurança e de trânsito; • Comunique imediatamente seu Gestor imediato qualquer situação de risco que possa ocasionar acidentes; • Não pratique atos inseguros, arriscando-se desnecessariamente;",
+                acidentes: "Todo e qualquer acidente ou incidente de trabalho deverá ser comunicado ao Gestor e ao setor de Segurança do Trabalho imediatamente. Caso haja alguém passando mal nas dependências da empresa acione o brigadista do setor. A CAT será emitida in até 24 horas úteis após investigação da Segurança do Trabalho. <br><b>TODO ACIDENTE DEVE SER COMUNICADO IMEDIATAMENTE À LIDERANÇA E À SEGURANÇA DO TRABALHO.</b>",
+                procedimentos: "• Atenção ao caminhar nas bases operacionais, utilize as faixas de segurança; • Atravesse na faixa de pedestre e nunca utilize o aparelho celular enquanto anda; • Cumpra as disposições legais e regulamentadoras sobre Segurança e Medicina do Trabalho; • Colabore com a empresa no atendimento imediato da realização dos exames médicos.",
+                responsabilidade: "De acordo com o Artigo 158, Parágrafo Único, da lei 6.514/77 e Norma Regulamentadora NR 01, a recusa ao fiel cumprimento desta ORDEM DE SERVIÇO constituirá ATO FALTOSO sujeitando o funcionário às penalidades previstas na lei.",
+                normas: "• Não consumir bebida alcoólica ou entorpecentes; • Paralisar atividade sempre que constatar perigo grave e iminente; • Não executar tarefas para as quais não foi treinado, autorizado e habilitado.",
+                recusa: "Em caso de risco grave e iminente, a ICOMON garante o direito de recusa. Declaro que fui orientado sobre os riscos e procedimentos de segurança, estando ciente das sanções disciplinares aplicáveis."
+            }
+        };
 
-        async function loadTSVFiles() {
+        function saveDB() { localStorage.setItem('icomon_pro_db_v4_colors', JSON.stringify(db)); }
+
+        // --- FUNÇÃO PARA SINCRONIZAR RISCOS GHE AUTOMATICAMENTE ---
+        async function syncGHERiscos() {
             try {
-                // 1. CARREGA FUNÇÕES (cargos_pgr.tsv)
-                const resCargos = await fetch('cargos_pgr.tsv');
-                const tsvCargos = await resCargos.text();
-                const linesC = tsvCargos.trim().split('\n').slice(1);
-                db.cargos = linesC.map((l, i) => {
-                    const c = l.split('\t');
-                    return { id: i, nome: c[0]?.trim().toUpperCase(), setor: c[1]?.trim().toUpperCase(), desc: c[2]?.trim() };
-                });
-                db.setores = [...new Set(db.cargos.map(c => c.setor))].sort();
-
-                // 2. CARREGA INVENTÁRIO DE RISCOS (ghe_riscos.tsv)
-                const resRiscos = await fetch('ghe_riscos.tsv');
-                const tsvRiscos = await resRiscos.text();
-                const linesR = tsvRiscos.trim().split('\n').slice(1);
-                linesR.forEach(l => {
-                    const c = l.split('\t');
-                    const ghe = c[0]?.trim().toUpperCase();
+                const response = await fetch('ghe_riscos.tsv');
+                if (!response.ok) return;
+                const text = await response.text();
+                const lines = text.trim().split('\n');
+                
+                lines.slice(1).forEach(line => {
+                    const cols = line.split('\t');
+                    const ghe = cols[0]?.trim().toUpperCase();
                     if(ghe) {
                         db.sectorHazards[ghe] = {
-                            agentes: c[1], medidas: c[2], epis: c[3], epcs: c[4], peric: c[5], insal: c[6]
+                            agentes: cols[1]?.trim() || "",
+                            medidas: cols[2]?.trim() || "",
+                            epis: cols[3]?.trim() || "",
+                            epcs: cols[4]?.trim() || "",
+                            peric: cols[5]?.trim() || "Não caracteriza conforme NR 16",
+                            insal: cols[6]?.trim() || "Não caracteriza conforme NR 15"
                         };
                     }
                 });
-                localStorage.setItem('icomon_v2026_db', JSON.stringify(db));
-            } catch (e) { console.error("Erro ao sincronizar TSVs:", e); }
+                saveDB();
+            } catch (e) { console.error("Erro ao sincronizar ghe_riscos.tsv:", e); }
         }
 
-        function populateSelectors() {
+        async function buildDatabaseFromTSV() {
+            if (db.cargos && db.cargos.length > 0) return;
+            try {
+                const response = await fetch('cargos_pgr.tsv');
+                if (!response.ok) return;
+                const tsvText = await response.text();
+                processTSVText(tsvText);
+            } catch (err) { console.error(err); }
+        }
+
+        function processTSVText(tsvText) {
+            const lines = tsvText.trim().split('\n');
+            const seen = new Set();
+            lines.slice(1).forEach((line, i) => {
+                const cols = line.split('\t');
+                if (cols.length < 3) return;
+                const cargoNome = cols[1].trim().toUpperCase();
+                const mappedSetor = mapSectorName(cols[2].trim().toUpperCase());
+                const key = `${mappedSetor}|${cargoNome}`;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    db.cargos.push({ id: i, nome: cargoNome, setor: mappedSetor, desc: cols[3]?.trim() || "", agentes: "", medidas: "", epis: "", epcs: "", peric: "", insal: "" });
+                }
+            });
+            saveDB();
+        }
+
+        function mapSectorName(s) {
+            if (s === "DG") return "DG - DISTRIBUIÇÃO GERAL";
+            if (s.includes("ALMOX")) return "ALMOXARIFADO";
+            return s;
+        }
+
+        function switchTab(tab) {
+            if (tab === 'admin' && prompt("Senha:") !== "icomon") return;
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${tab}`).classList.add('active');
+            if(tab === 'admin') renderAdmin();
+            if(tab === 'gerador') initGerador();
+            if(tab === 'textos') loadTextosInputs();
+        }
+
+        async function initGerador() {
+            await buildDatabaseFromTSV();
+            await syncGHERiscos();
             const s = document.getElementById('selSetor');
             s.innerHTML = '<option value="">Escolha...</option>' + db.setores.map(x => `<option value="${x}">${x}</option>`).join('');
+            applyLogo();
+            applyTextos();
+            syncResponsavel();
+            sync();
+        }
+
+        function applyTextos() {
+            const keys = ['pRecomendacoes', 'pAcidentes', 'pProcedimentos', 'pResponsabilidade', 'pNormas', 'pRecusa'];
+            keys.forEach(k => document.getElementById(k).innerHTML = `<p class="section-text">${db.textos[k.substring(1).toLowerCase()]}</p>`);
         }
 
         function updateMatriz() {
             const sector = document.getElementById('selSetor').value;
-            const filtered = db.cargos.filter(c => c.setor === sector);
-            document.getElementById('selCargo').innerHTML = '<option value="">Função...</option>' + filtered.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+            const cargos = db.cargos.filter(c => c.setor === sector);
+            document.getElementById('selCargo').innerHTML = '<option value="">Escolha...</option>' + cargos.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
         }
 
         function applyData() {
@@ -197,79 +695,70 @@
             const cargo = db.cargos.find(x => x.id == id);
             if(!cargo) return;
 
-            const hazards = db.sectorHazards[cargo.setor] || { agentes: "", medidas: "", epis: "", epcs: "", peric: "Não caracteriza", insal: "Não caracteriza" };
+            const hazards = db.sectorHazards[cargo.setor] || SECTOR_HAZARDS[cargo.setor] || { agentes: "", medidas: "", epis: "", epcs: "", peric: "N/A", insal: "N/A" };
 
             document.getElementById('vSetor').innerText = cargo.setor;
             document.getElementById('vCargo').innerText = cargo.nome;
-            document.getElementById('vDesc').innerText = cargo.desc;
+            document.getElementById('vDesc').innerHTML = `<p class="section-text">${cargo.desc}</p>`;
             document.getElementById('vAgentes').innerHTML = formatRisksGrouped(hazards.agentes);
-            document.getElementById('vMedidas').innerHTML = formatMedidas(hazards.medidas, hazards.epis, hazards.epcs);
+            document.getElementById('vMedidas').innerHTML = formatPreventativeMeasures(hazards.medidas, hazards.epis, hazards.epcs);
             document.getElementById('vPericulosidade').innerText = hazards.peric;
             document.getElementById('vInsalubridade').innerText = hazards.insal;
         }
 
+        // Funções de formatação mantidas do seu original para cores e layout
         function formatRisksGrouped(text) {
             if(!text) return "-";
-            const items = text.split(/[;|\n]/);
-            let buckets = { acidente: [], ergonomico: [], fisico: [], biologico: [], quimico: [], psicossocial: [] };
-            
-            items.forEach(item => {
-                const lower = item.toLowerCase();
-                let found = false;
-                for (const key in RISK_CATEGORIES) {
-                    if (RISK_CATEGORIES[key].keywords.some(kw => lower.includes(kw))) {
-                        buckets[key].push(item.trim());
-                        found = true;
-                        break;
-                    }
-                }
-                if(!found) buckets.acidente.push(item.trim());
-            });
-
             let html = "";
-            for (const key in RISK_CATEGORIES) {
-                if(buckets[key].length > 0) {
-                    html += `<div><span style="color:${RISK_CATEGORIES[key].color}; font-weight:900">${RISK_CATEGORIES[key].name}:</span> ${buckets[key].join(', ')}</div>`;
+            const buckets = { Acidente: [], Ergonomico: [], Fisico: [], Biologico: [], Quimico: [], Psicossocial: [] };
+            text.split(/[;|\n]/).forEach(item => {
+                const low = item.toLowerCase();
+                for (const k in RISK_CATEGORIES) {
+                    if (RISK_CATEGORIES[k].keywords.some(kw => low.includes(kw))) { buckets[RISK_CATEGORIES[k].name].push(item.trim()); return; }
                 }
+            });
+            for (const k in buckets) {
+                if(buckets[k].length > 0) html += `<div><span style="color:${Object.values(RISK_CATEGORIES).find(c=>c.name===k).color}; font-weight:900">${k}:</span> ${buckets[k].join(', ')}</div>`;
             }
             return html || "-";
         }
 
-        function formatMedidas(adm, epi, epc) {
+        function formatPreventativeMeasures(med, epi, epc) {
             let h = "";
-            if(adm) h += `<div><b>Medidas ADM:</b> ${adm}</div>`;
-            if(epi) h += `<div><b>EPIs:</b> ${epi}</div>`;
-            if(epc) h += `<div><b>EPCs:</b> ${epc}</div>`;
+            if(med) h += `<div><span class="text-blue-800 font-black uppercase block">Medidas Adm:</span> ${med}</div>`;
+            if(epi) h += `<div><span class="text-green-800 font-black uppercase block">EPIs:</span> ${epi}</div>`;
+            if(epc) h += `<div><span class="text-teal-800 font-black uppercase block">EPCs:</span> ${epc}</div>`;
             return h || "-";
-        }
-
-        function applyTextos() {
-            document.getElementById('pRecomendacoes').innerText = db.textos.recomendacoes;
-            document.getElementById('pAcidentes').innerText = db.textos.acidentes;
-            document.getElementById('pProcedimentos').innerText = db.textos.procedimentos;
         }
 
         function sync() {
             document.getElementById('vNomePreview').innerText = document.getElementById('inNome').value.toUpperCase();
             document.getElementById('vREPreview').innerText = document.getElementById('inRE').value;
+            document.getElementById('vProjetoPreview').innerText = document.getElementById('inProjeto').value.toUpperCase();
             const d = document.getElementById('inData').value;
             if(d) {
                 const f = d.split('-').reverse().join('/');
-                document.getElementById('vDataAtu').innerText = f;
                 document.getElementById('vDataEmissao').innerText = f;
+                document.getElementById('vDataAtu').innerText = f;
             }
         }
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.getElementById(`tab-${tab}`).classList.add('active');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`btn-${tab}`).classList.add('active');
+        function syncResponsavel() {
+            db.config.respNome = document.getElementById('inRespNome').value.toUpperCase();
+            db.config.respRE = document.getElementById('inRespRE').value;
+            document.getElementById('vRespNomePreview').innerText = db.config.respNome;
+            document.getElementById('vRespREPreview').innerText = db.config.respRE;
+            saveDB();
         }
 
         function exportPDF() {
-            const element = document.getElementById('osPreview');
-            html2pdf().set({ margin: 0, filename: 'OS_ICOMON.pdf', html2canvas: { scale: 2 } }).from(element).save();
+            const opt = { margin: 0, filename: 'OS_ICOMON.pdf', html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4' } };
+            html2pdf().set(opt).from(document.getElementById('osPreview')).save();
+        }
+
+        function applyLogo() {
+            const img = document.getElementById('custom-logo');
+            if(db.config.logo) { img.src = db.config.logo; img.classList.remove('hidden'); document.getElementById('default-logo').classList.add('hidden'); }
         }
 
         window.onload = initGerador;
