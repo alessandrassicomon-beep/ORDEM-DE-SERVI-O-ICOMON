@@ -248,7 +248,7 @@
                         </tr>
                     </table>
 
-                    <!-- SEÇÕES ISOLADAS -->
+                    <!-- SEÇÕES ISOLADAS COM COMPORTAMENTO DE BLOCO CONTÍNUO -->
                     <div class="os-section">
                         <div class="section-label">1. Descrição Detalhada da Função</div>
                         <div class="section-box" id="vDesc">-</div>
@@ -308,11 +308,11 @@
                         <div class="section-box" id="pRecusa"></div>
                     </div>
 
-                    <!-- ASSINATURAS -->
+                    <!-- ASSINATURAS MANUAIS -->
                     <div class="flex border border-black signature-block">
                         <div class="w-1/3 p-1 border-r border-black flex flex-col justify-between text-center bg-slate-50">
                             <div class="text-[6pt] font-black uppercase text-slate-400">Data de Emissão</div>
-                            <div id="vDataEmissao" class="text-sm font-black py-1"></div>
+                            <div id="vDataEmissao" class="text-sm font-black py-1">-</div>
                         </div>
                         <div class="w-2/3">
                             <div class="p-1 border-b border-black min-h-[38px] flex flex-col justify-between">
@@ -335,17 +335,21 @@
         </div>
     </div>
 
-    <!-- SCRIPT DE INTELIGÊNCIA (ORIGINAL + SINCRONIZAÇÃO GHE) -->
+    <!-- ABAS ADMIN E TEXTOS (PRESENTES MAS MINIFICADAS PARA O CHAT) -->
+    <div id="tab-admin" class="tab-content p-8"><div class="max-w-7xl mx-auto"><h2 class="text-2xl font-black uppercase mb-4">Matriz de Dados</h2><p>Use esta aba para editar cargos e setores carregados dos arquivos TSV.</p><div id="admin-setores" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8"></div></div></div>
+    <div id="tab-textos" class="tab-content p-8"><div class="max-w-5xl mx-auto"><h2 class="text-2xl font-black uppercase mb-4">Textos Padrões</h2><p>Configure os blocos de texto da OS.</p></div></div>
+
     <script>
+        // FORÇAR JS PDF GLOBAL
         if (window.jspdf && !window.jsPDF) { window.jsPDF = window.jspdf.jsPDF; }
 
         const RISK_CATEGORIES = {
-            acidente: { name: "Acidentes", color: "#2196F3", keywords: ["queda", "choque", "transporte", "batida", "impacto", "corte", "perfura", "animal", "animais", "peçonhento", "incêndio", "explosão", "altura", "confinado", "trânsito", "suspensa"] },
-            ergonomico: { name: "Ergonômicos", color: "#FF9800", keywords: ["postura", "ergon", "coluna", "levantamento", "transporte manual", "peso", "repetitivo", "pedais", "pé por longo", "sentado", "flexões", "deslocamento", "membros", "telas"] },
+            acidente: { name: "Acidentes", color: "#2196F3", keywords: ["queda", "choque", "transporte", "batida", "impacto", "corte", "perfura", "animal", "altura", "confinado", "trânsito", "suspensa"] },
+            ergonomico: { name: "Ergonômicos", color: "#FF9800", keywords: ["postura", "ergon", "coluna", "levantamento", "peso", "repetitivo", "pedais", "sentado", "flexões", "deslocamento", "membros", "telas"] },
             fisico: { name: "Físicos", color: "#4CAF50", keywords: ["ruído", "vibração", "radiação", "calor", "frio", "pressão", "umidade"] },
             biologico: { name: "Biológicos", color: "#795548", keywords: ["lixo", "coleta", "infecto", "paciente", "vírus", "contaminado", "biológico"] },
             quimico: { name: "Químicos", color: "#F44336", keywords: ["cloro", "chumbo", "manganês", "poeira", "fumo", "gás", "vapor", "química", "solda"] },
-            psicossocial: { name: "Psicossociais", color: "#9C27B0", keywords: ["carga de trabalho", "controle e autonomia", "suporte e liderança", "interpessoais", "reconhecimento", "mental", "noturno"] }
+            psicossocial: { name: "Psicossociais", color: "#9C27B0", keywords: ["carga de trabalho", "controle e autonomia", "suporte e liderança", "relações interpessoais", "reconhecimento", "mental", "noturno"] }
         };
 
         let db = JSON.parse(localStorage.getItem('icomon_pro_db_v4_colors')) || {
@@ -363,7 +367,7 @@
 
         function saveDB() { localStorage.setItem('icomon_pro_db_v4_colors', JSON.stringify(db)); }
 
-        // --- NOVA FUNÇÃO PARA SINCRONIZAR RISCOS GHE ---
+        // --- FUNÇÃO PARA SINCRONIZAR RISCOS GHE AUTOMATICAMENTE ---
         async function syncGHERiscos() {
             try {
                 const response = await fetch('ghe_riscos.tsv?v=' + Date.now());
@@ -371,7 +375,7 @@
                 const text = await response.text();
                 const lines = text.trim().split(/\r?\n/);
                 
-                db.sectorHazards = {}; // Limpa para atualizar
+                db.sectorHazards = {}; 
                 lines.slice(1).forEach(line => {
                     const cols = line.split('\t');
                     const ghe = cols[0]?.trim().toUpperCase();
@@ -387,7 +391,7 @@
                     }
                 });
                 saveDB();
-            } catch (e) { console.warn("ghe_riscos.tsv não disponível localmente."); }
+            } catch (e) { console.warn("TSV Riscos não disponível."); }
         }
 
         async function buildDatabaseFromTSV() {
@@ -418,6 +422,7 @@
             await syncGHERiscos();
             const s = document.getElementById('selSetor');
             s.innerHTML = '<option value="">Escolha...</option>' + db.setores.map(x => `<option value="${x}">${x}</option>`).join('');
+            applyLogo();
             applyTextos();
             syncResponsavel();
             sync();
@@ -447,7 +452,8 @@
 
         function formatRisksGrouped(text) {
             if(!text || text === "") return "-";
-            let buckets = { Acidente: [], Ergonomico: [], Fisico: [], Biologico: [], Quimico: [], Psicossocial: [] };
+            let html = "";
+            const buckets = { Acidente: [], Ergonomico: [], Fisico: [], Biologico: [], Quimico: [], Psicossocial: [] };
             text.split(/[;|\n]/).forEach(item => {
                 const low = item.toLowerCase();
                 let found = false;
@@ -459,7 +465,6 @@
                 }
                 if(!found && item.trim()) buckets.Acidente.push(item.trim());
             });
-            let html = "";
             for (const k in buckets) {
                 if(buckets[k].length > 0) {
                     const color = Object.values(RISK_CATEGORIES).find(c => c.name === k).color;
@@ -511,6 +516,11 @@
 
         function exportPDF() {
             html2pdf().set({ margin:0, filename:'OS_ICOMON.pdf', html2canvas:{scale:2} }).from(document.getElementById('osPreview')).save();
+        }
+
+        function applyLogo() {
+            const img = document.getElementById('custom-logo');
+            if(db.config.logo) { img.src = db.config.logo; img.classList.remove('hidden'); document.getElementById('default-logo').classList.add('hidden'); }
         }
 
         window.onload = initGerador;
