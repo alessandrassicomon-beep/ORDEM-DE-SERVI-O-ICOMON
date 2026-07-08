@@ -17,7 +17,7 @@
     <!-- Biblioteca JSZip para compactação de arquivos -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght=300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         /* Reset de dimensionamento global */
         *, ::before, ::after {
@@ -555,269 +555,269 @@
             psicossocial: { name: "Psicossociais", color: "#9C27B0", keywords: ["carga de trabalho", "controle e autonomia", "suporte e liderança", "relações interpessoais", "reconhecimento", "condições organizacionais", "saúde mental", "psicossocial", "turno noturno"] }
         };
 
-        // MATRIZ DE RISCO COMPLETA DOS 33 SETORES (Utilizada como padrão inicial / Fallback)
+        // MATRIZ DE RISCO ATUALIZADA - DADOS DA TABELA ICOMON 2026
         const SECTOR_HAZARDS = {
-            "OBRAS REDE": {
-                agentes: "Acidentes: Trabalho em altura acima de 2 metros ; Choque elétrico ; Acidente de trânsito em transporte motorizado ; Queda de mesmo nível ; Queda com diferença de nível de até 2 metros ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos | Físicos: Radiação não ionizante ; Ruído ocupacional | Ergonômicos: Exigência de flexões frequentes della coluna vertebral ; Frequente deslocamento a pé durante a jornada de trabalho ; Levantamento e transporte manual de cargas ; Exigência de elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saude mental e bem-estar",
-                medidas: "Treinamento e manutenção preventiva ; Instalação de proteções físicas e sinalizações de segurança ; Uso de pisos antiderrapantes e atenção ao caminhar ; Inspeção e utilização de ferramentas adequadas ; Controle de acesso a áreas restritas ; Controle integrado de pragas e vetores ; Planejamento de posturas e organização dos postos de trabalho ; Pausas regulares e uso de luvas antivibração ; Gestão equilibrada de escalas de trabalho e metas realistas ; Programas corporativos de feedback profissional ; Apoio psicológico e initiatives de bem-estar",
-                epis: "Capacete H700 com aba frontal ; Botina com biqueira de composite e solado de borracha ; Luva mista de vaqueta cano curto ; Perneira de segurança ; Capa de chuva impermeável ; Luva de proteção mista de vaqueta ; Óculos de segurança contra impactos ; Colete refletivo tipo X ; Protetor auricular tipo concha",
-                epcs: "Telemetria veicular ; Cones de sinalização refletivos",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "LABORATÓRIO": {
-                agentes: "Acidentes: Choque elétrico ; Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Uso de equipamentos específicos para atividades próximas a redes de baixa tensão ; Uso de pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Luva de isolamento elétrico de borracha classe 0 tipo II até 1000V ; Sobreluva mista de vaqueta cano longo ; Óculos de proteção contra impactos incolor",
-                epcs: "Chave detectora de tensão de 90V a 1000V",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "MANUTENÇÃO PATRIMONIAL": {
-                agentes: "Acidentes: Queda de mesmo nível | Físicos: Radiação não ionizante | Químicos: Cloro e seus compostos tóxicos | Biológicos: Contato com agentes biológicos na coleta de lixo | Ergonômicos: Exigência de flexões frequentes da coluna vertebral | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Sistemas de ventilação adequados, monitoramento ambiental e uso de EPIs ; Uso de EPIs específicos e garantia de cronograma de vacinação ; Pisos antiderrapantes e atenção ao caminhar ; Ajuste de altura de superfícies e mobiliários ; Uso de protetor solar e pausas estruturadas sob sombra ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Bota de segurança de PVC para proteção química e umidade ; Luva de látex ; Óculos de segurança contra impactos ; Respirador semi-facial ; Avental impermeável ; Botina com biqueira de composite e solado de borracha ; Protetor solar com repelente",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Caracteriza conforme NR 15"
-            },
-            "OPERAÇÃO EMPILHADEIRA": {
-                agentes: "Acidentes: Queda de mesmo nível ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Movimentação de carga suspensa | Físicos: Radiação não ionizante ; Ruído ocupacional ; Vibração de corpo inteiro | Ergonômicos: Uso frequente de pedais ; Levantamento e transporte manual de cargas | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Uso de ferramentas adequadas e conservadas ; Isolamento e sinalização de área de cargas suspensas ; Ajuste ergonômico de equipamentos e assentos ; Postura correta e treinamento postural ; Uso de protetor solar e pausas em locais cobertos ; Enclausuramento de máquinas, manutenção periódica e protetores auriculares ; Manutenção preventiva de assentos com amortecimento nos veículos ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Botina com biqueira de composite e solado de borracha ; Capacete H700 com aba frontal ; Luva mista de vaqueta cano curto ; Capa de chuva ; Luva de proteção mista de vaqueta ; Óculos de segurança contra impactos ; Colete refletivo tipo X ; Protetor solar com repelente ; Protetor auricular tipo concha",
-                epcs: "Cones de sinalização refletivos",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "ALMOXARIFADO": {
-                agentes: "Acidentes: Queda de mesmo nível ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais | Físicos: Radiação não ionizante | Ergonômicos: Exigência de flexões frequentes da coluna vertebral ; Frequente deslocamento a pé durante a jornada de trabalho ; Levantamento e transporte manual de cargas ; Exigência de elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Uso de ferramentas adequadas e conservadas ; Uso de protetor solar e pausas em locais cobertos ; Ajuste ergonômico de superfícies e mobiliários ; Planejamento de posturas e organização de estoques ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Botina com biqueira de composite e solado de borracha ; Capacete H700 com aba frontal ; Luva mista de vaqueta cano curto ; Óculos de proteção contra impactos incolor ; Protetor solar com repelente",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "DG - DISTRIBUIÇÃO GERAL": {
-                agentes: "Acidentes: Queda de mesmo nível ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Queda com diferença de nível de até 2 metros | Ergonômicos: Postura sentada por longos períodos | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Uso de ferramentas adequadas e conservadas ; Proteção física e sinalização contra quedas ; Pausas regulares e alongamentos durante a jornada ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Botina com biqueira de composite e solado de borracha ; Capacete H700 com aba frontal ; Luva mista de vaqueta cano curto",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "OPERAÇÃO B2B": {
-                agentes: "Acidentes: Trabalho em altura > 2m, Choque elétrico, Transporte motorizado, Diferente diferença de nível ≤ 2m, Queda de mesmo nível, Batida contra, Impacto de objeto, Cortes e perfurações, Ataque de animais, Animal peçonhento, Levantamento E Transporte Manual De Cargas | Ergonômicos: Exigência De Elevação Frequente De Membros Superiores, Exigência De Flexões De Coluna Vertebral Frequentes, Frequente Deslocamento A Pé Durante A Jornada De Trabalho | Físicos: Radiação Não Ionizante | Psicossociais: Turno noturno, Carga de Trabalho, Controle e Autonomia, Suporte e Liderança, Relações Interpessoais, Reconhecimento e Valorização, Condições Organizacionais, Saúde Mental e Bem-Estar",
-                medidas: "EPIs e EPCs específicos para trabalho em altura ; Uso de equipamentos isolantes específicos para atividades em proximidade com rede de baixa tensão ; Treinamento em direção defensiva e manutenção preventiva do veículo ; Instalação de proteções físicas e sinalizações ; Pisos antiderrapantes e atenção ao caminhar ; Inspeção de ferramentas adequadas ; Barreiras físicas e controle de acessos ; Controle de pragas e vetores ; Uso de protetor solar e pausas estruturadas sob sombra ; Ajuste postural e ergonômico ; Organização de escalas de trabalho equilibradas ; Planejamento de metas e demandas realistas ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Capacete H 700 com ABA frontal; Óculos de proteção visual incolor; Luva mista de vaqueta; Cinto tipo paraquedista com talabarte de posicionamento; Botina com biqueira de composite; Capa de Chuva; Cones de sinalização laranja com faixa refletiva; Luva de isolamento elétrica de borracha classe 0 tipo II até 1000V; Sobreluva mista de vaqueta cano longo; Perneira; Protetor solar FPS60 com repelente",
-                epcs: "correia de segurança de couro para escada; G.M.V - Garra Meio de Vão; KIT - L.V.M - Linha de Vida Móvel; Nivelador de escada; Chave detectora de tensão (90v a 1000v); Fita zebrada; Telemetria Veicular",
-                peric: "Caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "FROTA": {
-                agentes: "Acidentes: Queda de mesmo nível ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais | Físicos: Radiação não ionizante | Ergonômicos: Exigência de flexões frequentes da coluna vertebral ; Frequente deslocamento a pé durante a jornada de trabalho ; Levantamento e transporte manual de cargas | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Uso de ferramentas adequadas e conservadas ; Uso de protetor solar e pausas em locais cobertos ; Ajuste ergonômico de superfícies e mobiliários ; Planejamento de posturas ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Botina com biqueira de composite e solado de borracha ; Capacete H700 com aba frontal ; Luva mista de vaqueta cano curto ; Protetor solar com repelente",
-                epcs: "Cones de sinalização refletivos",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "AMBULATÓRIO QSMS": {
-                agentes: "Acidentes: Queda de mesmo nível | Biológicos: Contato com pacientes ou materiais biológicos contaminados | Ergonômicos: Postura sentada por longos períodos | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Uso de EPIs específicos e garantia de cronograma de vacinação ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Sapato fechado de EVA ; Bota de segurança de PVC para proteção química e umidade ; Luva de látex ; Óculos de segurança contra impactos ; Respirador semi-facial ; Avental impermeável (Jaleco)",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "SEGURANÇA DO TRABALHO": {
-                agentes: "Acidentes: Acidente de trânsito em transporte motorizado ; Queda de mesmo nível ; Impacto de objeto ; Ataque de animais | Físicos: Radiação não ionizante | Ergonômicos: Trabalho intensivo com digitação ou entrada de dados ; Postura sentada por longos períodos | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Treinamento em direção defensiva e manutenção preventiva do veículo ; Pisos antiderrapantes e atenção ao caminhar ; Uso de capacete contra quedas de objetos ; Barreiras físicas e controle de acessos ; Uso de protetor solar e pausas estruturadas sob sombra ; Pausas regulares e alongamentos durante a jornada ; Ajuste postural e ergonômico de mobiliários ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Botina com biqueira de composite e solado de borracha ; Capacete H700 com aba frontal ; Protetor solar com repelente",
-                epcs: "Telemetria veicular ; Suporte para notebook ; Filtro de proteção para tela",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
             "SUPERVISÃO OPERACIONAL": {
-                agentes: "Acidentes: Trabalho em altura acima de 2 metros ; Choque elétrico ; Acidente de trânsito em transporte motorizado ; Queda de mesmo nível ; Queda com diferença de nível de até 2 metros ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos | Físicos: Radiação não ionizante ; Ruído ocupacional | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos em telas ou monitores ; Levantamento e transporte manual de cargas | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "EPIs e EPCs específicos para trabalho em altura ; Uso de equipamentos isolantes específicos para atividades em proximidade com rede de baixa tensão ; Treinamento em direção defensiva e manutenção preventiva do veículo ; Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Uso de ferramentas adequadas e conservadas ; Barreiras físicas e controle de acessos ; Controle de pragas e vetores ; Uso de protetor solar e pausas estruturadas sob sombra ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação ; Treinamento de postura ergonômica ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Capacete H700 com aba frontal ; Óculos de proteção contra impactos incolor ; Luva mista de vaqueta cano curto ; Cinturão de segurança tipo paraquedista com talabarte de posicionamento ; Botina com biqueira de composite e solado de borracha ; Capa de chuva impermeável ; Luva de isolamento elétrico de borracha classe 0 tipo II até 1000V ; Sobreluva mista de vaqueta cano longo ; Perneira de segurança ; Protetor solar com repelente",
-                epcs: "Correia de segurança de couro para escada ; Garra meio de vão ; Kit de linha de vida móvel ; Nivelador de escada ; Chave detectora de tensão de 90V a 1000V ; Fita zebrada ; Telemetria veicular ; Cones de sinalização refletivos",
+                agentes: "Acidentes: Trabalho em altura acima de 2 metros; Choque elétrico; Transporte motorizado; Queda de mesmo nível; Queda com diferença de nível até 2 metros; Batida contra; Impacto de objetos; Cortes e perfurações; Ataque de animais; Contato com animais peçonhentos | Físicos: Radiação não ionizante; Ruído | Ergonômicos: Postura sentada por longos períodos; Reflexos em telas e monitores; Levantamento e transporte manual de cargas | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-02 – Identificação de Cordoalha Energizada; IT-SST-03 – Relato de Perigo; IT-SST-07 – Trabalhos em Altura; IT-SST-08 – Trabalhos em Proximidades com a Rede Elétrica; IT-SST-15 – Trabalhos com Máquinas e Equipamentos; IT-SST-38 – Realização de Trabalhos em Travessia.",
+                epis: "Capacete de segurança com aba frontal; Óculos de proteção visual incolor; Luva mista de vaqueta cano curto; Luva de isolamento elétrica classe 0 tipo II até 1000 V; Sobreluva mista de vaqueta cano longo; Cinto tipo paraquedista com talabarte de posicionamento; Botina com biqueira de composite; Capa de chuva; Perneira; Protetor solar com repelente.",
+                epcs: "Correia de segurança para escada; Garra meio de vão; Linha de vida móvel; Nivelador de escada; Chave detectora de tensão; Fita zebrada; Cones de sinalização; Telemetria veicular.",
                 peric: "Caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "TRANSPORTE ADMINISTRATIVO": {
-                agentes: "Acidentes: Acidente de trânsito em transporte motorizado ; Queda com diferença de nível de até 2 metros ; Queda de mesmo nível ; Batida contra objeto ou estrutura ; Impacto de objeto ; Ataque de animais | Físicos: Radiação não ionizante | Ergonômicos: Exigência de flexões frequentes da coluna vertebral ; Levantamento e transporte manual de cargas | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Treinamento em direção defensiva e manutenção preventiva do veículo ; Instalação de proteções físicas e sinalizações ; Pisos antiderrapantes e atenção ao caminhar ; Uso de capacete contra quedas de objetos ; Barreiras físicas e controle de acessos ; Uso de protetor solar e pausas estruturadas sob sombra ; Ajuste postural e ergonômico ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Capacete H700 com aba frontal ; Botina com biqueira de composite e solado de borracha ; Luva mista de vaqueta cano curto ; Protetor solar com repelente",
-                epcs: "Telemetria veicular ; Cones de sinalização refletivos",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "SUPERVISÃO ALMOXARIFADO": {
-                agentes: "Acidentes: Acidente de trânsito em transporte motorizado ; Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Treinamento em direção defensiva e manutenção preventiva do veículo ; Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "",
-                epcs: "Telemetria veicular",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "FTTA-A": {
-                agentes: "Acidentes: Acidente de trânsito em transporte motorizado ; Queda com diferença de nível de até 2 metros ; Queda de mesmo nível ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos | Físicos: Radiação não ionizante | Ergonômicos: Frequente deslocamento a pé durante a jornada de trabalho ; Exigência de flexões frequentes da coluna vertebral ; Levantamento e transporte manual de cargas ; Exigência de elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Treinamento em direção defensiva e manutenção preventiva do veículo ; Instalação de proteções físicas e sinalizações ; Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Uso de ferramentas adequadas e conservadas ; Barreiras físicas e controle de acessos ; Controle de pragas e vetores ; Uso de protetor solar e pausas estruturadas sob sombra ; Organização espacial de ferramentas ; Ajuste de altura e ergonomia ; Treinamento de postura ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programs corporativos de bem-estar",
-                epis: "Capacete H700 com aba frontal ; Botina com biqueira de composite e solado de borracha ; Luva mista de vaqueta cano curto ; Perneira de segurança ; Protetor solar com repelente",
-                epcs: "Telemetria veicular",
-                peric: "Caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "INSTALADORES DE EQUIPAMENTOS B2B": {
-                agentes: "Acidentes: Acidente de trânsito em transporte motorizado ; Queda com diferença de nível de até 2 metros ; Queda de mesmo nível ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos | Físicos: Radiação não ionizante | Ergonômicos: Exigência de flexões frequentes da coluna vertebral ; Frequente deslocamento a pé durante a jornada de trabalho ; Levantamento e transporte manual de cargas ; Postura de pé por longos períodos ; Exigência de elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Treinamento em direção defensiva e manutenção preventiva do veículo ; Instalação de proteções físicas e sinalizações ; Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Uso de ferramentas adequadas e conservadas ; Barreiras físicas e controle de acessos ; Controle de pragas e vetores ; Uso de protetor solar e pausas estruturadas sob sombra ; Ajuste de altura ; Organização do espaço ; Treinamento ergonômico de postura ; Pausas para alternância postural ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Capacete H700 com aba frontal ; Botina com biqueira de composite e solado de borracha ; Luva mista de vaqueta cano curto ; Perneira de segurança ; Protetor solar com repelente",
-                epcs: "Telemetria veicular",
-                peric: "Caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "GERÊNCIAS ADMINISTRATIVO": {
-                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos em telas ou monitores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "COORDENAÇÃO ADMINISTRATIVO": {
-                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos em telas ou monitores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "JURÍDICO ADMINISTRATIVO": {
-                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos em telas ou monitores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "CONSULTORES ADMINISTRATIVO": {
-                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos em telas ou monitores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "ESPECIALISTAS ADMINISTRATIVO": {
-                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos em telas ou monitores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "ANALISTAS ADMINISTRATIVO": {
-                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos em telas ou monitores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "SUPERVISÃO ADMINISTRATIVO": {
-                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos em telas ou monitores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "PROJETOS ADMINISTRATIVO": {
-                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos em telas ou monitores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programs corporativos de bem-estar",
-                epis: "",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "ADMINISTRATIVO": {
-                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos em telas ou monitores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "MONITOR ESCRITÓRIO DE SERVIÇOS": {
-                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos in telas ou monitores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Pisos antiderrapantes e atenção ao caminhar ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação e brilho do monitor ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "",
-                epcs: "",
-                peric: "Não caracteriza conforme NR 16",
-                insal: "Não caracteriza conforme NR 15"
-            },
-            "SEGURANÇA DO TRABALHO OBRAS": {
-                agentes: "Acidentes: Trabalho em altura acima de 2 metros ; Trabalho em espaço confinado ; Ataque de animais ; Contato com animais peçonhentos ; Batida contra objeto ou estrutura ; Impacto de objeto ; Queda com diferença de nível de até 2 metros ; Queda de mesmo nível ; Cortes e perfurações por ferramentas ou materiais | Físicos: Radiação não ionizante ; Ruído ocupacional | Ergonômicos: Exigência de elevação frequente de membros superiores ; Exigência de flexões frequentes da coluna vertebral ; Levantamento e transporte manual de cargas ; Postura de pé por longos períodos ; Trabalho em posturas incômodas por longos períodos ; Frequente deslocamento a pé durante a jornada de trabalho | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Equipamentos de proteção para trabalho em altura ; Equipamentos para atividade em espaço confinado ; Barreiras físicas e controle de acessos ; Controle de pragas e vetores ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Proteção física e sinalização contra quedas ; Pisos antiderrapantes e atenção ao caminhar ; Uso de ferramentas adequadas e conservadas ; Uso de protetor solar e pausas estruturadas sob sombra ; Ajuste postural ; Treinamento ergonômico de postura ; Pausas para alternância postural ; Ajuste de mobiliário ; Organização espacial de ferramentas ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Capacete tipo alpinista ; Cinturão de segurança tipo paraquedista com talabarte de posicionamento ; Talabarte em Y ; Óculos de segurança contra impactos com proteção UV ; Capacete H700 com aba frontal ; Luva mista de vaqueta cano curto ; Botina com biqueira de composite e solado de borracha ; Luva em poliuretano (PU) ; Botina em poliuretano (PU) ; Respirador semi-facial com filtro mecânico ; Perneira de segurança ; Protetor solar com repelente ; Protetor auricular tipo concha",
-                epcs: "Correia de segurança de couro para escada ; Kit de linha de vida móvel ; Nivelador de escada ; Garra meio de vão ; Detector de quatro gases ; Exaustor e insuflador de ar para espaço confinado ; Grade de sinalização de ferro ; Sinalizador luminoso intermitente ; System de resgate com tripé e guincho autorresgatador",
-                peric: "Não caracteriza conforme NR 16",
                 insal: "Não caracteriza conforme NR 15"
             },
             "ASSISTENCIA TÉCNICA": {
-                agentes: "Acidentes: Trabalho em altura acima de 2 metros ; Choque elétrico ; Acidente de trânsito em transporte motorizado ; Queda de mesmo nível ; Queda com diferença de nível de até 2 metros ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos | Físicos: Radiação não ionizante | Ergonômicos: Exigência de elevação frequente de membros superiores ; Exigência de flexões frequentes da coluna vertebral ; Frequente deslocamento a pé durante a jornada de trabalho ; Levantamento e transporte manual de cargas | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "EPIs e EPCs específicos para trabalho em altura ; Uso de equipamentos isolantes específicos para atividades em proximidade com rede de baixa tensão ; Treinamento in direção defensiva e manutenção preventiva do veículo ; Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Uso de ferramentas adequadas e conservadas ; Barreiras física e controle de acessos ; Controle de pragas e vetores ; Uso de protetor solar e pausas estruturadas sob sombra ; Ajuste ergonômico ; Organização do espaço ; Treinamento ergonômico postural ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Capacete H700 com aba frontal ; Óculos de proteção contra impactos incolor ; Luva mista de vaqueta cano curto ; Cinturão de segurança tipo paraquedista com talabarte de posicionamento ; Botina com biqueira de composite e solado de borracha ; Capa de chuva impermeável ; Luva de isolamento elétrico de borracha classe 0 tipo II até 1000V ; Sobreluva mista de vaqueta cano longo ; Perneira de segurança ; Protetor solar com repelente",
-                epcs: "Correia de segurança de couro para escada ; Garra meio de vão ; Kit de linha de vida móvel ; Nivelador de escada ; Chave detectora de tensão de 90V a 1000V ; Fita zebrada ; Telemetria veicular ; Cones de sinalização refletivos",
+                agentes: "Acidentes: Trabalho em altura acima de 2 metros; Choque elétrico; Transporte motorizado; Queda de mesmo nível; Queda com diferença de nível até 2 metros; Batida contra; Impacto de objetos; Cortes e perfurações; Ataque de animais; Contato com animais peçonhentos | Físicos: Radiação não ionizante | Ergonômicos: Elevação frequente de membros superiores; Flexões frequentes da coluna vertebral; Deslocamento frequente a pé durante a jornada; Levantamento e transporte manual de cargas | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-02 – Identificação de Cordoalha Energizada; IT-SST-03 – Relato de Perigo; IT-SST-07 – Trabalhos em Altura; IT-SST-08 – Trabalhos em Proximidades com a Rede Elétrica; IT-SST-15 – Trabalhos com Máquinas e Equipamentos; IT-SST-38 – Realização de Trabalhos em Travessia.",
+                epis: "Capacete de segurança; Óculos de proteção visual incolor; Luva mista de vaqueta cano curto; Luva de isolamento elétrica classe 0 tipo II até 1000 V; Sobreluva mista de vaqueta cano longo; Cinto tipo paraquedista com talabarte de posicionamento; Botina com biqueira de composite; Capa de chuva; Perneira; Protetor solar com repelente.",
+                epcs: "Correia de segurança para escada; Garra meio de vão; Linha de vida móvel; Nivelador de escada; Chave detectora de tensão; Fita zebrada; Cones de sinalização; Telemetria veicular.",
                 peric: "Caracteriza conforme NR 16",
                 insal: "Não caracteriza conforme NR 15"
             },
             "COORDENAÇÃO OPERACIONAL": {
-                agentes: "Acidentes: Acidente de trânsito em transporte motorizado ; Queda de mesmo nível ; Batida contra objeto ou estrutura | Físicos: Radiação não ionizante | Psicossociais: Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Treinamento em direção defensiva e manutenção preventiva do veículo ; Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de protetor solar e pausas em locais cobertos ; Planejamento de demandas realistas ; Delegação de maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Botina com biqueira de composite e solado de borracha ; Capacete H700 com aba frontal ; Protetor solar com repelente",
+                agentes: "Acidentes: Transporte motorizado; Queda de mesmo nível; Batida contra | Físicos: Radiação não ionizante | Psicossociais: Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-03 – Relato de Perigo.",
+                epis: "Botina com biqueira de composite; Capacete de segurança; Protetor solar com repelente.",
                 epcs: "Telemetria veicular",
                 peric: "Não caracteriza conforme NR 16",
                 insal: "Não caracteriza conforme NR 15"
             },
             "SUPERVISÃO REDE": {
-                agentes: "Acidentes: Trabalho em altura acima de 2 metros ; Choque elétrico ; Trabalho em espaço confinado ; Acidente de trânsito em transporte motorizado ; Queda com diferença de nível de até 2 metros ; Queda de mesmo nível ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos | Físicos: Radiação não ionizante | Ergonômicos: Postura sentada por longos períodos ; Presença de reflexos em telas ou monitores ; Levantamento e transporte manual de cargas | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "EPIs e EPCs específicos para trabalho em altura ; Uso de equipamentos isolantes específicos para atividades em proximidade com rede de baixa tensão ; Equipamentos e procedimentos para atividades em espaço confinado ; Treinamento em direção defensiva e manutenção preventiva do veículo ; Proteção física e sinalizações ; Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Uso de ferramentas adequadas e conservadas ; Barreiras físicas e controle de acessos ; Controle de pragas e vetores ; Uso de protetor solar e pausas estruturadas sob sombra ; Pausas regulares e alongamentos durante a jornada ; Ajuste ergonômico de iluminação ; Treinamento de postura ergonômica ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Capacete H700 com aba frontal ; Óculos de proteção contra impactos incolor ; Luva mista de vaqueta cano curto ; Cinturão de segurança tipo paraquedista com talabarte de posicionamento ; Botina com biqueira de composite e solado de borracha ; Luva de isolamento elétrico de borracha classe 0 tipo II até 1000V ; Sobreluva mista de vaqueta cano longo ; Luva em poliuretano (PU) ; Botina em poliuretano (PU) ; Respirador semi-facial com filtro mecânico ; Perneira de segurança ; Protetor solar com repelente ; Protetor auricular tipo concha",
-                epcs: "Correia de segurança de couro para escada ; Garra meio de vão ; Kit de linha de vida móvel ; Nivelador de escada ; Chave detectora de tensão de 90V a 1000V ; Fita zebrada ; Detector de quatro gases ; Exaustor e insuflador de ar para espaço confinado ; Grade de sinalização de ferro ; Sinalizador luminoso intermitente ; Sistema de resgate com tripé e guincho autorresgatador ; Telemetria veicular ; Cones de sinalização refletivos",
+                agentes: "Acidentes: Trabalho em altura acima de 2 metros; Choque elétrico; Trabalho em espaço confinado; Transporte motorizado; Queda com diferença de nível até 2 metros; Queda de mesmo nível; Batida contra; Impacto de objetos; Cortes e perfurações; Ataque de animais; Contato com animais peçonhentos | Físicos: Radiação não ionizante | Ergonômicos: Postura sentada por longos períodos; Reflexos em telas e monitores; Levantamento e transporte manual de cargas | Psicossociais: Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-02 – Identificação de Cordoalha Energizada; IT-SST-03 – Relato de Perigo; IT-SST-07 – Trabalhos em Altura; IT-SST-08 – Trabalhos em Proximidades com a Rede Elétrica; IT-SST-12 – Realização de Trabalhos em Espaço Confinado; IT-SST-13 – Plano de Resgate para Trabalho em Espaço Confinado; IT-SST-15 – Trabalhos com Máquinas e Equipamentos; IT-SST-38 – Realização de Trabalhos em Travessia.",
+                epis: "Capacete de segurança; Óculos de proteção visual incolor; Luva mista de vaqueta cano curto; Luva de isolamento elétrica classe 0 tipo II até 1000 V; Sobreluva mista de vaqueta cano longo; Cinto tipo paraquedista com talabarte de posicionamento; Botina com biqueira de composite; Luva em PU; Respirador semifacial com filtro; Perneira; Protetor solar com repelente.",
+                epcs: "Correia de segurança para escada; Garra meio de vão; Linha de vida móvel; Nivelador de escada; Chave detectora de tensão; Fita zebrada; Detector de gás; Exaustor/insuflador de ar para espaço confinado; Grade de sinalização; Sinalizador luminoso; Sistema de resgate com tripé; Telemetria veicular.",
                 peric: "Caracteriza conforme NR 16",
                 insal: "Não caracteriza conforme NR 15"
             },
             "REDE / CABISTA": {
-                agentes: "Acidentes: Trabalho em altura acima de 2 metros ; Choque elétrico ; Trabalho em espaço confinado ; Acidente de trânsito em transporte motorizado ; Queda com diferença de nível de até 2 metros ; Queda de mesmo nível ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos | Físicos: Radiação não ionizante | Ergonômicos: Levantamento e transporte manual de cargas ; Exigência de flexões frequentes da coluna vertebral ; Trabalho em posturas incômodas por longos períodos ; Exigência de elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "EPIs e EPCs específicos para trabalho em altura ; Uso de equipamentos isolantes específicos para atividades em proximidade com rede de baixa tensão ; Equipamentos e procedimentos para atividades em espaço confinado ; Treinamento em direção defensiva e manutenção preventiva do veículo ; Proteção física e sinalizações ; Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Uso de ferramentas adequadas e conservadas ; Barreiras físicas e controle de acessos ; Controle de pragas e vetores ; Uso de protetor solar e pausas estruturadas sob sombra ; Treinamento de postura ergonômica ; Ajuste postural ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Capacete H700 com aba frontal ; Óculos de proteção contra impactos incolor ; Luva mista de vaqueta cano curto ; Cinturão de segurança tipo paraquedista com talabarte de posicionamento ; Botina com biqueira de composite e solado de borracha ; Luva de isolamento elétrico de borracha classe 0 tipo II até 1000V ; Sobreluva mista de vaqueta cano longo ; Luva em poliuretano (PU) ; Botina em poliuretano (PU) ; Respirador semi-facial com filtro mecânico ; Perneira de segurança ; Protetor solar com repelente ; Protetor auricular tipo concha",
-                epcs: "Correia de segurança de couro para escada ; Garra meio de vão ; Kit de linha de vida móvel ; Nivelador de escada ; Chave detectora de tensão de 90V a 1000V ; Fita zebrada ; Detector de quatro gases ; Exaustor e insuflador de ar para espaço confinado ; Grade de sinalização de ferro ; Sinalizador luminoso intermitente ; Sistema de resgate com tripé e guincho autorresgatador ; Telemetria veicular ; Cones de sinalização refletivos",
+                agentes: "Acidentes: Trabalho em altura acima de 2 metros; Choque elétrico; Trabalho em espaço confinado; Transporte motorizado; Queda com diferença de nível até 2 metros; Queda de mesmo nível; Batida contra; Impacto de objetos; Cortes e perfurações; Ataque de animais; Contato com animais peçonhentos | Físicos: Radiação não ionizante | Ergonômicos: Levantamento e transporte manual de cargas; Flexões frequentes da coluna vertebral; Trabalho em posturas incômodas por longos períodos; Elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-02 – Identificação de Cordoalha Energizada; IT-SST-03 – Relato de Perigo; IT-SST-07 – Trabalhos em Altura; IT-SST-08 – Trabalhos em Proximidades com a Rede Elétrica; IT-SST-12 – Realização de Trabalhos em Espaço Confinado; IT-SST-13 – Plano de Resgate para Trabalho em Espaço Confinado; IT-SST-15 – Trabalhos com Máquinas e Equipamentos; IT-SST-38 – Realização de Trabalhos em Travessia.",
+                epis: "Capacete de segurança; Óculos de proteção visual incolor; Luva mista de vaqueta cano curto; Luva de isolamento elétrica classe 0 tipo II até 1000 V; Sobreluva mista de vaqueta cano longo; Cinto tipo paraquedista com talabarte de posicionamento; Botina com biqueira de composite; Luva em PU; Respirador semifacial com filtro; Perneira; Protetor solar com repelente.",
+                epcs: "Correia de segurança para escada; Garra meio de vão; Linha de vida móvel; Nivelador de escada; Chave detectora de tensão; Fita zebrada; Detector de gás; Exaustor/insuflador de ar para espaço confinado; Grade de sinalização; Sinalizador luminoso; Sistema de resgate com tripé; Telemetria veicular.",
                 peric: "Caracteriza conforme NR 16",
                 insal: "Não caracteriza conforme NR 15"
             },
             "SOLDA": {
-                agentes: "Acidentes: Acidente de trânsito em transporte motorizado ; Queda com diferença de nível de até 2 metros ; Queda de mesmo nível ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos | Físicos: Radiação não ionizante ; Ruído ocupacional | Químicos: Chumbo e seus compostos tóxicos ; Manganês e seus compostos | Ergonômicos: Exigência de flexões frequentes da coluna vertebral ; Trabalho em posturas incômodas por longos períodos | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Substituição de processos químicos nocivos e uso de EPIs respiratórios ; Controle de limite de exposição, exaustão e ventilação dirigida ; Enclausuramento acústico de máquinas e protetores auriculares ; Uso de protetor solar e pausas na sombra ; Treinamento em direção defensiva e manutenção do veículo ; Proteção física e barreiras de isolamento ; Piso antiderrapante e atenção ao caminhar ; Sinalização e isolamento da área de soldagem ; Uso de ferramentas adequadas ; Ajuste postural ergonômico ; Gestão de escalas de trabalho e metas realistas ; Capacitação de líderes e canais de apoio ; Políticas contra assédio e conflitos ; Programas de valorização e feedback contínuo ; Revisão periódica de processos ; Apoio psicossocial e iniciativas de bem-estar",
-                epis: "Bota de segurança de PVC para proteção química e umidade ; Botina com biqueira de composite e solado de borracha ; Capa de chuva impermeável ; Capacete H700 com aba frontal ; Luva de segurança confeccionada em raspa ; Luva mista de vaqueta cano curto ; Luva de segurança para proteção química ; Óculos de segurança contra impactos ; Sobreluva mista de raspa ; Respirador semi-facial com filtro para fumos e gases ; Protetor solar com repelente ; Colete refletivo tipo X ; Perneira de segurança ; Avental de raspa tipo barbeiro ; Cinturão de segurança tipo paraquedista com talabarte de posicionamento ; Luva de isolamento elétrico de borracha classe 0 tipo II até 1000V ; Protetor auricular tipo inserção de silicone",
-                epcs: "Máscara de solda com filtro de escurecimento automático ; Telemetria veicular ; Cones de sinalização refletivos",
+                agentes: "Acidentes: Transporte motorizado; Queda com diferença de nível até 2 metros; Queda de mesmo nível; Batida contra; Impacto de objetos; Cortes e perfurações; Ataque de animais; Contato com animais peçonhentos | Físicos: Radiação não ionizante; Ruído | Químicos: Chumbo e seus compostos tóxicos; Manganês e seus compostos | Ergonômicos: Flexões frequentes da coluna vertebral; Trabalho em posturas incômodas por longos períodos | Psicossociais: Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-03 – Relato de Perigo; IT-SST-15 – Trabalhos com Máquinas e Equipamentos.",
+                epis: "Bota de PVC para proteção química; Botina com biqueira de composite; Capa de chuva; Capacete de segurança; Cinturão tipo paraquedista com talabarte de posicionamento; Colete refletivo tipo X; Luva de raspa; Luva mista de vaqueta cano curto; Luva para proteção química; Luva de isolamento elétrica classe 0 tipo II até 1000 V; Máscara de solda; Óculos de segurança; Sobreluva de raspa; Respirador semifacial com filtro; Perneira; Avental de raspa tipo barbeiro; Protetor solar com repelente; Protetor auricular de inserção.",
+                epcs: "Telemetria veicular",
                 peric: "Não caracteriza conforme NR 16",
                 insal: "Não caracteriza conforme NR 15"
             },
             "REPARO INTERNO": {
-                agentes: "Acidentes: Acidente de trânsito em transporte motorizado ; Queda com diferença de nível de até 2 metros ; Queda de mesmo nível ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos | Físicos: Radiação não ionizante | Ergonômicos: Exigência de flexões frequentes da coluna vertebral ; Frequente deslocamento a pé durante a jornada de trabalho ; Levantamento e transporte manual de cargas ; Exigência de elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Treinamento em direção defensiva e manutenção preventiva do veículo ; Instalação de proteções físicas e sinalizações de segurança ; Uso de pisos antiderrapantes e atenção ao caminhar ; Inspeção e utilização de ferramentas adequadas ; Controle de acesso a áreas restritas ; Controle integrado de pragas e vetores ; Planejamento ergonômico postural ; Organização espacial de ferramentas ; Treinamento ergonômico postural ; Uso de protetor solar e pausas estruturadas sob sombra ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Capacete H700 com aba frontal ; Botina com biqueira de composite e solado de borracha ; Luva mista de vaqueta cano curto ; Perneira de segurança ; Protetor solar com repelente",
+                agentes: "Acidentes: Transporte motorizado; Queda com diferença de nível até 2 metros; Queda de mesmo nível; Batida contra; Impacto de objetos; Cortes e perfurações; Ataque de animais; Contato com animais peçonhentos | Físicos: Radiação não ionizante | Ergonômicos: Flexões frequentes da coluna vertebral; Deslocamento frequente a pé durante a jornada; Levantamento e transporte manual de cargas; Elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-03 – Relato de Perigo; IT-SST-15 – Trabalhos com Máquinas e Equipamentos.",
+                epis: "Capacete de segurança; Botina com biqueira de composite; Luva mista de vaqueta cano curto; Perneira; Protetor solar com repelente.",
                 epcs: "Telemetria veicular",
                 peric: "Não caracteriza conforme NR 16",
                 insal: "Não caracteriza conforme NR 15"
             },
             "OPERAÇÃO MUNCK": {
-                agentes: "Acidentes: Acidente de trânsito em transporte motorizado ; Queda com diferença de nível de até 2 metros ; Queda de mesmo nível ; Batida contra objeto ou estrutura ; Impacto de objeto ; Cortes e perfurações por ferramentas ou materiais ; Ataque de animais ; Contato com animais peçonhentos ; Movimentação de carga suspensa | Físicos: Radiação não ionizante ; Ruído ocupacional ; Vibração de corpo inteiro | Ergonômicos: Levantamento e transporte manual de cargas | Psicossociais: Trabalho em turno noturno ; Carga de trabalho ; Controle e autonomia ; Suporte e liderança ; Relações interpessoais ; Reconhecimento e valorização ; Condições organizacionais ; Saúde mental e bem-estar",
-                medidas: "Treinamento em direção defensiva e manutenção preventiva do veículo ; Instalação de proteções físicas e sinalizações ; Pisos antiderrapantes e atenção ao caminhar ; Instalação de sinalização de segurança e barreiras físicas ; Uso de capacete contra quedas de objetos ; Uso de ferramentas adequadas e conservadas ; Barreiras físicas e controle de acessos ; Controle de pragas e vetores ; Isolamento e sinalização da área de movimentação de cargas suspensas ; Treinamento ergonômico de postura ; Uso de protetor solar e pausas estruturadas sob sombra ; Enclausuramento de máquinas, manutenção acústica periódica e protetores auriculares ; Manutenção de amortecedores de assentos veiculares ; Gestão equilibrada de escalas de trabalho e metas realistas ; Delegação e maior autonomia nas tarefas ; Capacitação de líderes e canais de apoio ; Mediação de conflitos e políticas de prevenção ao assédio ; Programas de valorização e feedback contínuo ; Revisão periódica de processos organizacionais ; Apoio psicológico e programas corporativos de bem-estar",
-                epis: "Capacete H700 com aba frontal ; Botina com biqueira de composite e solado de borracha ; Luva mista de vaqueta cano curto ; Perneira de segurança ; Capa de chuva impermeável ; Luva de proteção mista de vaqueta ; Óculos de segurança contra impactos ; Colete refletivo tipo X ; Protetor solar com repelente ; Protetor auricular tipo concha",
-                epcs: "Telemetria veicular ; Cones de sinalização refletivos",
+                agentes: "Acidentes: Transporte motorizado; Queda com diferença de nível até 2 metros; Queda de mesmo nível; Batida contra; Impacto de objetos; Cortes e perfurações; Ataque de animais; Contato com animais peçonhentos; Carga suspensa | Físicos: Radiação não ionizante; Ruído; Vibração de corpo inteiro | Ergonômicos: Levantamento e transporte manual de cargas | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-03 – Relato de Perigo; IT-SST-15 – Trabalhos com Máquinas e Equipamentos.",
+                epis: "Capacete de segurança; Botina com biqueira de composite; Luva mista de vaqueta cano curto; Luva de proteção mista de vaqueta; Perneira; Capa de chuva; Óculos de segurança; Colete refletivo tipo X; Protetor solar com repelente; Protetor auricular tipo concha.",
+                epcs: "Telemetria veicular",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "OBRAS REDE": {
+                agentes: "Acidentes: Trabalho em altura acima de 2 metros; Choque elétrico; Transporte motorizado; Queda de mesmo nível; Queda com diferença de nível até 2 metros; Batida contra; Impacto de objetos; Cortes e perfurações; Ataque de animais; Contato com animais peçonhentos | Físicos: Radiação não ionizante; Ruído; Vibrações localizadas (mão-braço) | Ergonômicos: Flexões frequentes da coluna vertebral; Deslocamento frequente a pé durante a jornada; Levantamento e transporte manual de cargas; Elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "Treinamento e manutenção preventiva; Instalação de proteções físicas e sinalizações de segurança; Uso de pisos antiderrapantes; Inspeção de ferramentas; Controle de pragas; Pausas e luvas antivibração; Gestão de escalas e metas; Apoio psicológico.",
+                epis: "Capacete de segurança; Botina com biqueira de composite; Luva mista de vaqueta cano curto; Luva de proteção mista de vaqueta; Perneira; Capa de chuva; Óculos de segurança; Colete refletivo tipo X; Protetor auricular tipo concha.",
+                epcs: "Telemetria veicular",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "LABORATÓRIO": {
+                agentes: "Acidentes: Choque elétrico; Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-02 – Identificação de Cordoalha Energizada; IT-SST-03 – Relato de Perigo; IT-SST-08 – Trabalhos em Proximidades com a Rede Elétrica.",
+                epis: "Luva de isolamento elétrica classe 0 tipo II até 1000 V; Sobreluva mista de vaqueta cano longo; Óculos de proteção visual incolor.",
+                epcs: "Chave detectora de tensão",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "MANUTENÇÃO PATRIMONIAL": {
+                agentes: "Acidentes: Queda de mesmo nível | Físicos: Radiação não ionizante | Químicos: Cloro e seus compostos tóxicos | Biológicos: Contato com agentes biológicos na coleta de lixo | Ergonômicos: Flexões frequentes da coluna vertebral | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; Controle de EPIs e vacinação; Procedimentos de limpeza segura.",
+                epis: "Bota de PVC para proteção química e umidade; Botina com biqueira de composite; Luva de látex; Óculos de segurança; Respirador semifacial; Avental impermeável; Protetor solar com repelente.",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Caracteriza conforme NR 15"
+            },
+            "OPERAÇÃO EMPILHADEIRA": {
+                agentes: "Acidentes: Queda de mesmo nível; Batida contra; Impacto de objetos; Cortes e perfurações; Carga suspensa | Físicos: Radiação não ionizante; Ruído; Vibração de corpo inteiro | Ergonômicos: Uso frequente de pedais; Levantamento e transporte manual de cargas | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-03 – Relato de Perigo; IT-SST-15 – Trabalhos com Máquinas e Equipamentos.",
+                epis: "Botina com biqueira de composite; Capacete de segurança; Luva mista de vaqueta cano curto; Capa de chuva; Luva de proteção mista de vaqueta; Óculos de segurança; Colete refletivo tipo X; Protetor solar com repelente; Protetor auricular tipo concha",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "ALMOXARIFADO": {
+                agentes: "Acidentes: Queda de mesmo nível; Batida contra; Impacto de objetos; Cortes e perfurações | Físicos: Radiação não ionizante | Ergonômicos: Flexões frequentes da coluna vertebral; Deslocamento frequente a pé durante a jornada; Levantamento e transporte manual de cargas; Elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-03 – Relato de Perigo; IT-SST-15 – Trabalhos com Máquinas e Equipamentos.",
+                epis: "Botina com biqueira de composite; Capacete de segurança; Luva mista de vaqueta cano curto; Óculos de proteção visual incolor; Protetor solar com repelente.",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "DG - DISTRIBUIÇÃO GERAL": {
+                agentes: "Acidentes: Queda de mesmo nível; Batida contra; Impacto de objetos; Cortes e perfurações; Queda com diferença de nível até 2 metros | Ergonômicos: Postura sentada por longos períodos | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-03 – Relato de Perigo.",
+                epis: "Botina com biqueira de composite; Capacete de segurança; Luva mista de vaqueta cano curto.",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "OPERAÇÃO B2B": {
+                agentes: "Acidentes: Trabalho em altura acima de 2 metros; Choque elétrico; Transporte motorizado; Queda com diferença de nível até 2 metros; Queda de mesmo nível; Batida contra; Impacto de objetos; Cortes e perfurações; Ataque de animais; Contato com animais peçonhentos; Levantamento e transporte manual de cargas | Ergonômicos: Elevação frequente de membros superiores; Flexões frequentes da coluna vertebral; Deslocamento frequente a pé durante a jornada | Físicos: Radiação não ionizante | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-02 – Identificação de Cordoalha Energizada; IT-SST-03 – Relato de Perigo; IT-SST-07 – Trabalhos em Altura; IT-SST-08 – Trabalhos em Proximidades com a Rede Elétrica; IT-SST-15 – Trabalhos com Máquinas e Equipamentos; IT-SST-38 – Realização de Trabalhos em Travessia.",
+                epis: "Capacete de segurança; Óculos de proteção visual incolor; Luva mista de vaqueta; Cinto tipo paraquedista com talabarte de posicionamento; Botina com biqueira de composite; Capa de chuva; Luva de isolamento elétrica classe 0 tipo II até 1000 V; Sobreluva mista de vaqueta cano longo; Perneira; Protetor solar com repelente.",
+                epcs: "Correia de segurança para escada; Garra meio de vão; Linha de vida móvel; Nivelador de escada; Chave detectora de tensão; Fita zebrada; Telemetria veicular.",
+                peric: "Caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "FROTA": {
+                agentes: "Acidentes: Queda de mesmo nível; Batida contra; Impacto de objetos; Cortes e perfurações | Físicos: Radiação não ionizante | Ergonômicos: Flexões frequentes da coluna vertebral; Deslocamento frequente a pé durante a jornada; Levantamento e transporte manual de cargas | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-03 – Relato de Perigo; IT-SST-15 – Trabalhos com Máquinas e Equipamentos.",
+                epis: "Botina com biqueira de composite; Capacete de segurança; Luva mista de vaqueta cano curto; Protetor solar com repelente.",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "AMBULATÓRIO QSMS": {
+                agentes: "Acidentes: Queda de mesmo nível | Biológicos: Contato com pacientes ou materiais biológicos contaminados | Ergonômicos: Postura sentada por longos períodos | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; Treinamento de Ergonomia; Treinamentos Normativos.",
+                epis: "Sapato fechado em EVA; Bota de PVC para proteção química e umidade; Luva de látex; Óculos de segurança; Respirador semifacial; Avental impermeável (jaleco).",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Caracteriza conforme NR 15"
+            },
+            "SEGURANÇA DO TRABALHO": {
+                agentes: "Acidentes: Transporte motorizado; Queda de mesmo nível; Impacto de objetos; Ataque de animais | Físicos: Radiação não ionizante | Ergonômicos: Trabalho intensivo com digitação ou entrada de dados; Postura sentada por longos períodos | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; Treinamento de Ergonomia; Treinamento Normativo.",
+                epis: "Botina com biqueira de composite; Capacete de segurança; Protetor solar com repelente.",
+                epcs: "Telemetria veicular; Suporte para notebook; Filtro de proteção para tela.",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "TRANSPORTE ADMINISTRATIVO": {
+                agentes: "Acidentes: Transporte motorizado; Queda com diferença de nível até 2 metros; Queda de mesmo nível; Batida contra; Impacto de objetos; Ataque de animais | Físicos: Radiação não ionizante | Ergonômicos: Flexões frequentes da coluna vertebral; Levantamento e transporte manual de cargas | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-03 – Relato de Perigo.",
+                epis: "Capacete de segurança; Botina com biqueira de composite; Protetor solar com repelente.",
+                epcs: "Telemetria Veicular",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "SUPERVISÃO ALMOXARIFADO": {
+                agentes: "Acidentes: Transporte motorizado; Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-03 – Relato de Perigo.",
+                epis: "Botina com biqueira de composite; Capacete de segurança; Protetor solar com repelente.",
+                epcs: "Telemetria Veicular",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "FTTA-A": {
+                agentes: "Acidentes: Transporte motorizado; Queda com diferença de nível até 2 metros; Queda de mesmo nível; Batida contra; Impacto de objetos; Cortes e perfurações; Ataque de animais; Contato com animais peçonhentos | Físicos: Radiação não ionizante | Ergonômicos: Deslocamento frequente a pé durante a jornada; Flexões frequentes da coluna vertebral; Levantamento e transporte manual de cargas; Elevação frequente de membros superiores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-03 – Relato de Perigo; IT-SST-15 – Trabalhos com Máquinas e Equipamentos.",
+                epis: "Capacete de segurança; Botina com biqueira de composite; Luva mista de vaqueta cano curto; Perneira; Protetor solar com repelente.",
+                epcs: "Telemetria Veicular",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "INSTALADORES DE EQUIPAMENTOS B2B": {
+                agentes: "Acidentes: Trabalho em altura acima de 2 metros; Choque elétrico; Transporte motorizado; Queda com diferença de nível até 2 metros; Queda de mesmo nível; Batida contra; Impacto de objetos; Cortes e perfurações; Ataque de animais; Contato com animais peçonhentos; Levantamento e transporte manual de cargas | Ergonômicos: Elevação frequente de membros superiores; Flexões frequentes da coluna vertebral; Deslocamento frequente a pé durante a jornada | Físicos: Radiação não ionizante | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-02 – Identificação de Cordoalha Energizada; IT-SST-03 – Relato de Perigo; IT-SST-07 – Trabalhos em Altura; IT-SST-08 – Trabalhos em Proximidades com a Rede Elétrica; IT-SST-15 – Trabalhos com Máquinas e Equipamentos; IT-SST-38 – Realização de Trabalhos em Travessia.",
+                epis: "Capacete de segurança; Óculos de proteção visual incolor; Luva mista de vaqueta; Cinto tipo paraquedista com talabarte de posicionamento; Botina com biqueira de composite; Capa de chuva; Luva de isolamento elétrica classe 0 tipo II até 1000 V; Sobreluva mista de vaqueta cano longo; Perneira; Protetor solar com repelente.",
+                epcs: "Correia de segurança para escada; Garra meio de vão; Linha de vida móvel; Nivelador de escada; Chave detectora de tensão; Fita zebrada; Telemetria veicular.",
+                peric: "Caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "GERÊNCIAS ADMINISTRATIVO": {
+                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos; Reflexos em telas e monitores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; Treinamento de Ergonomia; Treinamento Normativo.",
+                epis: "-",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "COORDENAÇÃO ADMINISTRATIVO": {
+                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos; Reflexos em telas e monitores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; Treinamento de Ergonomia; Treinamento Normativo.",
+                epis: "-",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "JURÍDICO ADMINISTRATIVO": {
+                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos; Reflexos em telas e monitores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; Treinamento de Ergonomia; Treinamento Normativo.",
+                epis: "-",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "CONSULTORES ADMINISTRATIVO": {
+                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos; Reflexos em telas e monitores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; Treinamento de Ergonomia; Treinamento Normativo.",
+                epis: "-",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "ESPECIALISTAS ADMINISTRATIVO": {
+                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos; Reflexos em telas e monitores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; Treinamento de Ergonomia; Treinamento Normativo.",
+                epis: "-",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "ANALISTAS ADMINISTRATIVO": {
+                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos; Reflexos em telas e monitores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; Treinamento de Ergonomia; Treinamento Normativo.",
+                epis: "-",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "SUPERVISÃO ADMINISTRATIVO": {
+                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos; Reflexos em telas e monitores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; Treinamento de Ergonomia; Treinamento Normativo.",
+                epis: "-",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "PROJETOS ADMINISTRATIVO": {
+                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos; Reflexos em telas e monitores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; Treinamento de Ergonomia; Treinamento Normativo.",
+                epis: "-",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "ADMINISTRATIVO": {
+                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos; Reflexos em telas e monitores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; Treinamento de Ergonomia; Treinamento Normativo.",
+                epis: "-",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "MONITOR ESCRITÓRIO DE SERVIÇOS": {
+                agentes: "Acidentes: Queda de mesmo nível | Ergonômicos: Postura sentada por longos períodos; Reflexos em telas e monitores | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; Treinamento de Ergonomia; Treinamento Normativo.",
+                epis: "-",
+                epcs: "-",
+                peric: "Não caracteriza conforme NR 16",
+                insal: "Não caracteriza conforme NR 15"
+            },
+            "SEGURANÇA DO TRABALHO OBRAS": {
+                agentes: "Acidentes: Trabalho em altura acima de 2 metros; Trabalho em espaço confinado; Ataque de animais; Contato com animais peçonhentos; Batida contra; Impacto de objetos; Queda com diferença de nível até 2 metros; Queda de mesmo nível; Cortes e perfurações | Físicos: Radiação não ionizante; Ruído | Ergonômicos: Elevação frequente de membros superiores; Flexões frequentes da coluna vertebral; Levantamento e transporte manual de cargas; Postura de pé por longos períodos; Trabalho em posturas incômodas por longos períodos; Deslocamento frequente a pé durante a jornada | Psicossociais: Trabalho em turno noturno; Carga de trabalho; Controle e autonomia; Suporte e liderança; Relações interpessoais; Reconhecimento e valorização; Condições organizacionais; Saúde mental e bem-estar",
+                medidas: "APR Digital; IT-SST-02 – Identificação de Cordoalha Energizada; IT-SST-03 – Relato de Perigo; IT-SST-07 – Trabalhos em Altura; IT-SST-08 – Trabalhos em Proximidades com a Rede Elétrica; IT-SST-12 – Realização de Trabalhos em Espaço Confinado; IT-SST-13 – Plano de Resgate para Trabalho em Espaço Confinado; IT-SST-15 – Trabalhos com Máquinas e Equipamentos; IT-SST-38 – Realização de Trabalhos em Travessia.",
+                epis: "Capacete tipo alpinista; Capacete de segurança; Cinto tipo paraquedista com talabarte de posicionamento; Talabarte em Y; Óculos de segurança com proteção UV; Luva mista de vaqueta cano curto; Botina com biqueira de composite; Luva em PU; Respirador semifacial com filtro; Perneira; Protetor solar com repelente; Protetor auricular tipo concha.",
+                epcs: "Correia de segurança para escada; Linha de vida móvel; Nivelador de escada; Garra meio de vão; Detector de gás; Exaustor/insuflador de ar para espaço confinado; Grade de sinalização; Sinalizador luminoso; Sistema de resgate com tripé.",
                 peric: "Não caracteriza conforme NR 16",
                 insal: "Não caracteriza conforme NR 15"
             }
@@ -851,6 +851,30 @@
         if (!db.sectorHazards) {
             db.sectorHazards = JSON.parse(JSON.stringify(SECTOR_HAZARDS));
             localStorage.setItem('icomon_pro_db_v4_colors', JSON.stringify(db)); 
+        } else {
+            // Se já existir, podemos MERGEAR os novos dados para garantir que setores novos ou atualizados sejam incluídos
+            // É importante fazer um merge inteligente para não sobrescrever customizações do usuário
+            let updatedSectorHazards = { ...db.sectorHazards }; // Cria uma cópia
+            let changed = false;
+
+            for (const sectorName in SECTOR_HAZARDS) {
+                if (!updatedSectorHazards[sectorName]) {
+                    // Adiciona novos setores que não existiam
+                    updatedSectorHazards[sectorName] = SECTOR_HAZARDS[sectorName];
+                    changed = true;
+                } else {
+                    // Opcional: Para atualizar setores existentes com os dados da tabela,
+                    // você pode adicionar uma lógica aqui. Por enquanto, mantemos as customizações.
+                    // Se quiser FORÇAR a atualização para os dados da tabela:
+                    // updatedSectorHazards[sectorName] = { ...updatedSectorHazards[sectorName], ...SECTOR_HAZARDS[sectorName] };
+                    // changed = true;
+                }
+            }
+
+            if (changed) {
+                db.sectorHazards = updatedSectorHazards;
+                localStorage.setItem('icomon_pro_db_v4_colors', JSON.stringify(db));
+            }
         }
 
         // MIGRAÇÃO SILENCIOSA: Limpa os riscos gravados nas funções legadas (antigas)
