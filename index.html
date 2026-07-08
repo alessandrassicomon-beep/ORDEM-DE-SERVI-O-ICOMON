@@ -6,6 +6,8 @@
     <title>ICOMON - Sistema de Gestão SST v2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -17,11 +19,11 @@
             background: white; color: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             display: flex; flex-direction: column; overflow: hidden;
         }
-        .os-table { width: 100%; border-collapse: collapse; margin-top: -1px; }
-        .os-table td { border: 1px solid #000; padding: 4px 6px; font-size: 6.8pt; vertical-align: middle; }
-        .os-section { display: flex; flex-direction: column; margin-top: -1px; break-inside: avoid; }
-        .section-label { background: #f1f1f1; font-weight: 900; text-transform: uppercase; font-size: 6.8pt; border: 1px solid #000; padding: 4px 6px; }
-        .section-box { border: 1px solid #000; border-top: none; padding: 6px 8px; font-size: 6.8pt; text-align: justify; line-height: 1.4; }
+        .os-table { width: 100% !important; border-collapse: collapse; flex-shrink: 0; }
+        .os-table td { border: 1px solid #000; padding: 4px 6px; vertical-align: middle; font-size: 6.8pt; }
+        .os-section { page-break-inside: avoid; display: flex; flex-direction: column; margin-top: -1px; }
+        .section-label { background: #f1f1f1; font-weight: 900; text-transform: uppercase; font-size: 6.8pt; border: 1px solid #000; padding: 5px 6px; display: block; width: 100%; }
+        .section-box { border-left: 1px solid #000; border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 6px 8px; text-align: justify; font-size: 6.8pt; display: block; width: 100%; background: #fff; line-height: 1.4; }
         .tab-btn.active { @apply bg-blue-700 text-white shadow-inner; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
@@ -32,6 +34,7 @@
 </head>
 <body class="text-slate-800">
 
+    <!-- BARRA DE NAVEGAÇÃO ORIGINAL -->
     <nav class="no-print bg-slate-900 text-white p-4 sticky top-0 z-50 shadow-md">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
@@ -41,150 +44,209 @@
             <div class="flex bg-slate-800 rounded-lg p-1">
                 <button onclick="switchTab('gerador')" id="btn-gerador" class="tab-btn active px-4 py-1.5 rounded-md text-xs font-bold transition-all uppercase">Emissão de OS</button>
                 <button onclick="switchTab('admin')" id="btn-admin" class="tab-btn px-4 py-1.5 rounded-md text-xs font-bold transition-all uppercase">Matriz de Dados</button>
+                <button onclick="switchTab('textos')" id="btn-textos" class="tab-btn px-4 py-1.5 rounded-md text-xs font-bold transition-all uppercase">Textos Padrões</button>
             </div>
         </div>
     </nav>
 
+    <!-- ABA 1: GERADOR -->
     <div id="tab-gerador" class="tab-content active p-6">
         <div class="max-w-[1400px] mx-auto grid lg:grid-cols-[400px_1fr] gap-8">
             <aside class="no-print space-y-6">
                 <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-200 space-y-5">
-                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Parâmetros</h2>
-                    <input id="inNome" type="text" placeholder="NOME DO FUNCIONÁRIO" class="w-full border-2 p-3 rounded-xl text-sm uppercase font-medium" oninput="sync()">
+                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Parâmetros do Funcionário</h2>
+                    <input id="inNome" type="text" placeholder="Nome Completo" class="w-full border-2 p-3 rounded-xl text-sm uppercase font-medium" oninput="sync()">
                     <div class="grid grid-cols-2 gap-3">
                         <input id="inRE" type="text" placeholder="RE" class="w-full border-2 p-3 rounded-xl text-sm font-medium" oninput="sync()">
                         <input id="inData" type="date" class="w-full border-2 p-3 rounded-xl text-sm font-medium" oninput="sync()">
                     </div>
-                    <select id="selSetor" class="w-full border-2 p-3 rounded-xl text-sm font-semibold text-slate-700" onchange="updateMatriz()"></select>
-                    <select id="selCargo" class="w-full border-2 p-3 rounded-xl text-sm font-bold text-blue-900" onchange="applyData()"></select>
+                    <input id="inProjeto" type="text" placeholder="Projeto / Cliente (Ex: VIVO)" class="w-full border-2 p-3 rounded-xl text-sm uppercase font-medium" oninput="sync()">
+                    
+                    <div class="pt-4 border-t">
+                        <label class="text-[10px] font-black text-slate-400 uppercase">1. Área de Atuação / GHE</label>
+                        <select id="selSetor" class="w-full border-2 p-3 rounded-xl text-sm mt-1 bg-slate-50 font-semibold" onchange="updateMatriz()"></select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase">2. Cargo / Especialidade</label>
+                        <select id="selCargo" class="w-full border-2 p-3 rounded-xl text-sm mt-1 font-bold text-blue-900" onchange="applyData()"></select>
+                    </div>
+
                     <button onclick="exportPDF()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black uppercase text-xs hover:bg-blue-700 transition-all">Exportar PDF</button>
                 </div>
             </aside>
 
+            <!-- PREVIEW DA OS (LAYOUT A4 ORIGINAL) -->
             <main class="overflow-x-auto p-1 bg-slate-300 rounded-3xl border shadow-inner">
                 <div id="osPreview" class="page-a4">
-                    <!-- Cabeçalho OS -->
                     <table class="os-table">
                         <tr>
                             <td width="20%" class="text-center"><div class="font-black text-blue-600 text-xl">ICOMON</div></td>
                             <td width="60%" class="text-center">
                                 <div class="font-black text-[10pt] uppercase">Ordem de Serviço de Segurança e Saúde no Trabalho</div>
-                                <div class="text-[7pt] font-bold">NR-1 e Programa de Gerenciamento de Riscos (PGR)</div>
+                                <div class="text-[7pt] font-bold">Conforme NR-1 e Programa de Gerenciamento de Riscos (PGR)</div>
                             </td>
                             <td width="20%" class="text-center font-bold">F-SGI-71<br>REV.02</td>
                         </tr>
                     </table>
-
                     <table class="os-table">
                         <tr>
-                            <td width="35%"><span class="text-[5pt] block font-bold uppercase text-slate-500">Setor / GHE:</span><span id="vSetor" class="font-bold uppercase">-</span></td>
-                            <td width="40%"><span class="text-[5pt] block font-bold uppercase text-slate-500">Função:</span><span id="vCargo" class="font-bold uppercase">-</span></td>
-                            <td width="25%"><span class="text-[5pt] block font-bold uppercase text-slate-500">Emissão:</span><span id="vDataAtu" class="font-bold">-</span></td>
+                            <td width="35%"><span class="text-[6pt] block font-bold uppercase text-slate-500">Setor / GHE:</span><span id="vSetor" class="font-bold uppercase text-[7.5pt]">-</span></td>
+                            <td width="40%"><span class="text-[6pt] block font-bold uppercase text-slate-500">Função:</span><span id="vCargo" class="font-bold uppercase text-[7.5pt]">-</span></td>
+                            <td width="25%"><span class="text-[6pt] block font-bold uppercase text-slate-500">Data de Emissão:</span><span id="vDataAtu" class="font-bold text-[7.5pt]">-</span></td>
                         </tr>
                     </table>
 
                     <div class="os-section"><div class="section-label">1. Descrição Detalhada da Função</div><div class="section-box" id="vDesc">-</div></div>
-                    <div class="os-section"><div class="section-label">2. Agentes Associados / Riscos (Impactos)</div><div class="section-box" id="vAgentes">-</div></div>
-                    <div class="os-section"><div class="section-label">3. Medidas de Mitigação (Administrativas / EPI / EPC)</div><div class="section-box" id="vMedidas">-</div></div>
-                    
-                    <div class="os-section"><div class="section-label">4. Caracterização da exposição</div>
+                    <div class="os-section"><div class="section-label">2. Agentes Associados às Atividades (Riscos)</div><div class="section-box" id="vAgentes">-</div></div>
+                    <div class="os-section"><div class="section-label">3. Medidas Preventivas Obrigatórias (EPI / EPC)</div><div class="section-box" id="vMedidas">-</div></div>
+                    <div class="os-section"><div class="section-label">4. Recomendações de saúde e segurança</div><div class="section-box" id="pRecomendacoes"></div></div>
+                    <div class="os-section"><div class="section-label">5. Procedimentos em caso de acidentes</div><div class="section-box" id="pAcidentes"></div></div>
+                    <div class="os-section"><div class="section-label">6. Procedimentos de segurança</div><div class="section-box" id="pProcedimentos"></div></div>
+
+                    <div class="os-section">
+                        <div class="section-label">7. Caracterização da exposição</div>
                         <table class="os-table">
-                            <tr><td width="50%"><b>Periculosidade:</b> <span id="vPeric">...</span></td><td width="50%"><b>Insalubridade:</b> <span id="vInsal">...</span></td></tr>
+                            <tr><td width="60%"><b>Adicional de Periculosidade:</b></td><td id="vPericulosidade">...</td></tr>
+                            <tr><td width="60%"><b>Adicional de Insalubridade:</b></td><td id="vInsalubridade">...</td></tr>
                         </table>
                     </div>
 
-                    <!-- Rodapé simplificado para preview -->
-                    <div class="mt-auto border border-black p-2 flex justify-between">
-                        <div class="text-[7pt]">ASSINATURA: __________________________________ <br> <span id="vNomePreview" class="font-bold"></span> (RE: <span id="vREPreview"></span>)</div>
-                        <div class="text-[7pt] text-right">Data: <span id="vDataFinal"></span></div>
+                    <!-- ASSINATURAS -->
+                    <div class="mt-auto flex border border-black">
+                        <div class="w-1/3 p-2 border-r border-black text-center"><div class="text-[6pt] font-black uppercase">Data</div><div id="vDataEmissao" class="text-sm font-black"></div></div>
+                        <div class="w-2/3 p-2"><div class="text-[6pt] font-black uppercase">Assinatura do Funcionário</div><div class="text-[7pt]">NOME: <span id="vNomePreview" class="font-black"></span></div>RE: <span id="vREPreview"></span></div>
                     </div>
                 </div>
             </main>
         </div>
     </div>
 
+    <!-- SCRIPT DE INTELIGÊNCIA -->
     <script>
-        let db = { setores: [], cargos: [], sectorHazards: {}, textos: {} };
+        const RISK_CATEGORIES = {
+            acidente: { name: "Acidentes", color: "#2196F3", keywords: ["queda", "choque", "transporte", "batida", "impacto", "corte", "perfura", "animal", "peçonhento", "altura", "confinado", "trânsito", "suspensa"] },
+            ergonomico: { name: "Ergonômicos", color: "#FF9800", keywords: ["postura", "ergon", "coluna", "levantamento", "peso", "repetitivo", "pedais", "sentado", "visualização", "flexões", "deslocamento", "membros"] },
+            fisico: { name: "Físicos", color: "#4CAF50", keywords: ["ruído", "vibração", "radiação", "calor", "frio", "pressão", "umidade"] },
+            biologico: { name: "Biológicos", color: "#795548", keywords: ["lixo", "coleta", "infecto", "paciente", "vírus", "bactéria", "contaminado"] },
+            quimico: { name: "Químicos", color: "#F44336", keywords: ["cloro", "chumbo", "manganês", "poeira", "fumo", "névoa", "gás", "vapor", "solda"] },
+            psicossocial: { name: "Psicossociais", color: "#9C27B0", keywords: ["carga de trabalho", "autonomia", "liderança", "interpessoais", "reconhecimento", "saúde mental", "noturno"] }
+        };
 
-        // 1. CARREGAMENTO AUTOMÁTICO DOS TSVs (Cargos e Riscos/GHE)
-        async function buildDatabaseFromTSV() {
+        let db = JSON.parse(localStorage.getItem('icomon_v2026_db')) || {
+            setores: [], cargos: [], sectorHazards: {}, 
+            config: { respNome: "VICTOR SILVA SOARES", respRE: "50622" },
+            textos: {
+                recomendacoes: "• Obedeça às normas de saúde e segurança; • Obedeça às leis de trânsito; • Respeite a sinalização; • Comunique riscos imediatamente.",
+                acidentes: "Todo acidente deve ser comunicado ao Gestor imediatamente. A CAT será emitida em até 24h úteis.",
+                procedimentos: "• Atenção ao caminhar; • Atravesse na faixa; • Cumpra as disposições de SST.",
+                responsabilidade: "A recusa ao cumprimento desta OS constitui ATO FALTOSO sujeito a penalidades.",
+                normas: "• Não consumir álcool; • Paralisar atividade em caso de perigo grave; • Não executar tarefas sem treinamento.",
+                recusa: "Garantimos o direito de recusa em caso de risco grave e iminente."
+            }
+        };
+
+        async function initGerador() {
+            await loadTSVFiles();
+            populateSelectors();
+            applyTextos();
+            sync();
+        }
+
+        async function loadTSVFiles() {
             try {
-                // Carrega Cargos e Descrições
+                // 1. CARREGA FUNÇÕES (cargos_pgr.tsv)
                 const resCargos = await fetch('cargos_pgr.tsv');
                 const tsvCargos = await resCargos.text();
-                processCargos(tsvCargos);
+                const linesC = tsvCargos.trim().split('\n').slice(1);
+                db.cargos = linesC.map((l, i) => {
+                    const c = l.split('\t');
+                    return { id: i, nome: c[0]?.trim().toUpperCase(), setor: c[1]?.trim().toUpperCase(), desc: c[2]?.trim() };
+                });
+                db.setores = [...new Set(db.cargos.map(c => c.setor))].sort();
 
-                // Carrega Riscos e Planos de Mitigação (GHE)
+                // 2. CARREGA INVENTÁRIO DE RISCOS (ghe_riscos.tsv)
                 const resRiscos = await fetch('ghe_riscos.tsv');
                 const tsvRiscos = await resRiscos.text();
-                processGHERiscos(tsvRiscos);
-
-                updateSelectors();
-            } catch (err) {
-                console.error("Erro ao carregar arquivos TSV:", err);
-            }
+                const linesR = tsvRiscos.trim().split('\n').slice(1);
+                linesR.forEach(l => {
+                    const c = l.split('\t');
+                    const ghe = c[0]?.trim().toUpperCase();
+                    if(ghe) {
+                        db.sectorHazards[ghe] = {
+                            agentes: c[1], medidas: c[2], epis: c[3], epcs: c[4], peric: c[5], insal: c[6]
+                        };
+                    }
+                });
+                localStorage.setItem('icomon_v2026_db', JSON.stringify(db));
+            } catch (e) { console.error("Erro ao sincronizar TSVs:", e); }
         }
 
-        function processCargos(text) {
-            const lines = text.trim().split('\n');
-            db.cargos = lines.slice(1).map((line, i) => {
-                const cols = line.split('\t');
-                return { id: i, nome: cols[0]?.trim(), setor: cols[1]?.trim(), desc: cols[2]?.trim() };
-            });
-            db.setores = [...new Set(db.cargos.map(c => c.setor))].sort();
-        }
-
-        function processGHERiscos(text) {
-            const lines = text.trim().split('\n');
-            lines.slice(1).forEach(line => {
-                const cols = line.split('\t');
-                const ghe = cols[0]?.trim();
-                if (ghe) {
-                    db.sectorHazards[ghe] = {
-                        agentes: cols[1]?.trim() || "Nenhum risco específico identificado",
-                        medidas: cols[2]?.trim() || "",
-                        epis: cols[3]?.trim() || "",
-                        epcs: cols[4]?.trim() || "",
-                        peric: cols[5]?.trim() || "Não caracteriza",
-                        insal: cols[6]?.trim() || "Não caracteriza"
-                    };
-                }
-            });
-        }
-
-        function updateSelectors() {
+        function populateSelectors() {
             const s = document.getElementById('selSetor');
-            s.innerHTML = '<option value="">Selecione o Setor/GHE...</option>' + db.setores.map(x => `<option value="${x}">${x}</option>`).join('');
+            s.innerHTML = '<option value="">Escolha...</option>' + db.setores.map(x => `<option value="${x}">${x}</option>`).join('');
         }
 
         function updateMatriz() {
             const sector = document.getElementById('selSetor').value;
-            const cargos = db.cargos.filter(c => c.setor === sector);
-            document.getElementById('selCargo').innerHTML = '<option value="">Selecione a Função...</option>' + cargos.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+            const filtered = db.cargos.filter(c => c.setor === sector);
+            document.getElementById('selCargo').innerHTML = '<option value="">Função...</option>' + filtered.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
         }
 
         function applyData() {
             const id = document.getElementById('selCargo').value;
             const cargo = db.cargos.find(x => x.id == id);
-            if (!cargo) return;
+            if(!cargo) return;
 
-            const hazards = db.sectorHazards[cargo.setor] || { agentes: "Não definido", medidas: "", epis: "", epcs: "", peric: "-", insal: "-" };
+            const hazards = db.sectorHazards[cargo.setor] || { agentes: "", medidas: "", epis: "", epcs: "", peric: "Não caracteriza", insal: "Não caracteriza" };
 
             document.getElementById('vSetor').innerText = cargo.setor;
             document.getElementById('vCargo').innerText = cargo.nome;
             document.getElementById('vDesc').innerText = cargo.desc;
+            document.getElementById('vAgentes').innerHTML = formatRisksGrouped(hazards.agentes);
+            document.getElementById('vMedidas').innerHTML = formatMedidas(hazards.medidas, hazards.epis, hazards.epcs);
+            document.getElementById('vPericulosidade').innerText = hazards.peric;
+            document.getElementById('vInsalubridade').innerText = hazards.insal;
+        }
+
+        function formatRisksGrouped(text) {
+            if(!text) return "-";
+            const items = text.split(/[;|\n]/);
+            let buckets = { acidente: [], ergonomico: [], fisico: [], biologico: [], quimico: [], psicossocial: [] };
             
-            // Exibição dos Riscos (Impactos)
-            document.getElementById('vAgentes').innerHTML = hazards.agentes.split(';').join('<br>• ');
+            items.forEach(item => {
+                const lower = item.toLowerCase();
+                let found = false;
+                for (const key in RISK_CATEGORIES) {
+                    if (RISK_CATEGORIES[key].keywords.some(kw => lower.includes(kw))) {
+                        buckets[key].push(item.trim());
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found) buckets.acidente.push(item.trim());
+            });
 
-            // Exibição do Plano de Mitigação (Medidas + EPIs + EPCs)
-            let mitigacao = `<b>Medidas Administrativas:</b> ${hazards.medidas}<br>`;
-            if(hazards.epis) mitigacao += `<b>EPIs:</b> ${hazards.epis}<br>`;
-            if(hazards.epcs) mitigacao += `<b>EPCs:</b> ${hazards.epcs}`;
-            document.getElementById('vMedidas').innerHTML = mitigacao;
+            let html = "";
+            for (const key in RISK_CATEGORIES) {
+                if(buckets[key].length > 0) {
+                    html += `<div><span style="color:${RISK_CATEGORIES[key].color}; font-weight:900">${RISK_CATEGORIES[key].name}:</span> ${buckets[key].join(', ')}</div>`;
+                }
+            }
+            return html || "-";
+        }
 
-            document.getElementById('vPeric').innerText = hazards.peric;
-            document.getElementById('vInsal').innerText = hazards.insal;
+        function formatMedidas(adm, epi, epc) {
+            let h = "";
+            if(adm) h += `<div><b>Medidas ADM:</b> ${adm}</div>`;
+            if(epi) h += `<div><b>EPIs:</b> ${epi}</div>`;
+            if(epc) h += `<div><b>EPCs:</b> ${epc}</div>`;
+            return h || "-";
+        }
+
+        function applyTextos() {
+            document.getElementById('pRecomendacoes').innerText = db.textos.recomendacoes;
+            document.getElementById('pAcidentes').innerText = db.textos.acidentes;
+            document.getElementById('pProcedimentos').innerText = db.textos.procedimentos;
         }
 
         function sync() {
@@ -192,23 +254,25 @@
             document.getElementById('vREPreview').innerText = document.getElementById('inRE').value;
             const d = document.getElementById('inData').value;
             if(d) {
-                const formatada = d.split('-').reverse().join('/');
-                document.getElementById('vDataAtu').innerText = formatada;
-                document.getElementById('vDataFinal').innerText = formatada;
+                const f = d.split('-').reverse().join('/');
+                document.getElementById('vDataAtu').innerText = f;
+                document.getElementById('vDataEmissao').innerText = f;
             }
-        }
-
-        function exportPDF() {
-            const element = document.getElementById('osPreview');
-            html2pdf().from(element).save(`OS_${document.getElementById('inNome').value}.pdf`);
         }
 
         function switchTab(tab) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.getElementById(`tab-${tab}`).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${tab}`).classList.add('active');
         }
 
-        window.onload = buildDatabaseFromTSV;
+        function exportPDF() {
+            const element = document.getElementById('osPreview');
+            html2pdf().set({ margin: 0, filename: 'OS_ICOMON.pdf', html2canvas: { scale: 2 } }).from(element).save();
+        }
+
+        window.onload = initGerador;
     </script>
 </body>
 </html>
